@@ -40,9 +40,6 @@ public class User {
 
 	private String pwd;
 
-	@OneToMany(mappedBy = "user", fetch=FetchType.LAZY, cascade=CascadeType.ALL)
-	private List<Reservation> reservations;
-
 	public User() {
 	}
 

@@ -113,7 +113,7 @@ public class UserController {
 				request.getSession().setAttribute("logininfo", true);
 				request.getSession().setAttribute("userid", user.getId());
 				
-				return "redirect:/";
+				return "redirect:/Washer";
 			}
 			
 			// if pwd is not correct

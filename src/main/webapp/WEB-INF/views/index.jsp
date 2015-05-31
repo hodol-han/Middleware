@@ -2,13 +2,13 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8" session="false" %>
-<html>
+<html lang="en">
 <head>
 
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>Your page title here :)</title>
+  <title>Washerman</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -28,7 +28,7 @@
 
   <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="/images/favicon.png">
+  <link rel="icon" type="image/png" href="images/favicon.png">
 
 </head>
 <body>
@@ -38,10 +38,9 @@
   <div class="container">
     <section class="row header">
       <div class="six column">
-        <h1>Welcome</h1>
-        <p>Welcome to hell.</p>
-		<a class="button" href="<c:url value="/Book"/>">Book Search</a>
-		<a class="button" href="<c:url value="/Reservation"/>">Check my book reservations</a>
+        <h1>Washerman</h1>
+        <p>Welcome to washer manager.</p>
+		<a class="button button-primary" href="<c:url value="/Washer"/>">Check current running washers</a>
       </div>
     </section>
   </div>

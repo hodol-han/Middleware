@@ -23,7 +23,7 @@ public class LoginInterceptor extends HandlerInterceptorAdapter {
 
 			if (request.getSession().getAttribute("logininfo") == null) {
 				request.setAttribute("savedUrl", request.getRequestURI());				
-				response.sendRedirect("/BookRental/User/Login");
+				response.sendRedirect("/WasherMan/User/Login");
 				return false;
 			}
 		} catch (Exception e) {
