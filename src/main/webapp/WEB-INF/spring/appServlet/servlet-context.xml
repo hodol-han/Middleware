@@ -22,11 +22,15 @@
 	</beans:bean>
 
 	<context:component-scan base-package="kr.ac.ajou.lazybones" />
+	<context:component-scan base-package="kr.ac.ajou.lazybones.components" />
 	
 	<interceptors>
 		<interceptor>
 			<mapping path="/User/Modify" />
 			<mapping path="/Washer/**" />
+			
+			<exclude-mapping path="/Washer/Register/*"/>
+			<exclude-mapping path="/Washer/Unregister/*"/>
 				
 			<beans:bean class="kr.ac.ajou.lazybones.controllers.LoginInterceptor" />
 		</interceptor>
