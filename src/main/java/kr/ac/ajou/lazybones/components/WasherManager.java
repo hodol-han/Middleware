@@ -7,6 +7,8 @@ import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
+import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueue;
+import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueueHelper;
 import kr.ac.ajou.lazybones.washerapp.Washer.Washer;
 import kr.ac.ajou.lazybones.washerapp.Washer.WasherHelper;
 
@@ -26,7 +28,7 @@ public class WasherManager {
 	private final String port = "1050";
 	private final String host = "localhost";
 
-	private Map<String, Washer> washers;
+	private Map<String, ReservationQueue> washerReservationQueues;
 
 	private NamingContextExt ncRef;
 
@@ -35,7 +37,7 @@ public class WasherManager {
 	@PostConstruct
 	public void setup() throws InvalidName {
 		// properties for ORB. You can change hostname and port here.
-		washers = new HashMap<>();
+		washerReservationQueues = new HashMap<>();
 
 		Properties props = new Properties();
 		props.put("org.omg.CORBA.ORBInitialPort", this.port);
@@ -55,11 +57,11 @@ public class WasherManager {
 	}
 
 	public boolean addWasher(String name) {
-		Washer washer;
+		ReservationQueue washer;
 		try {
-			washer = WasherHelper.narrow(ncRef.resolve_str(name));
+			washer = ReservationQueueHelper.narrow(ncRef.resolve_str(name));
 			if (!washer._non_existent()) {
-				washers.put(name, washer);
+				washerReservationQueues.put(name, washer);
 				return true;
 			} else
 				return false;
@@ -79,31 +81,31 @@ public class WasherManager {
 	}
 
 	public boolean removeWasher(String name) {
-		Washer washer = washers.get(name);
-		if (washer != null) {
-			if (!(washer._non_existent()))
-				washer._release();
+		ReservationQueue washerQueue = washerReservationQueues.get(name);
+		if (washerQueue != null) {
+			if (!(washerQueue._non_existent()))
+				washerQueue._release();
 
-			washers.remove(name);
+			washerReservationQueues.remove(name);
 			return true;
 		}
 		return false;
 	}
 
-	public Map<String, Washer> getWashers() {
-		Map<String, Washer> map = new HashMap<>();
-		for (Entry<String, Washer> item : washers.entrySet()) {
+	public Map<String, ReservationQueue> getWashers() {
+		Map<String, ReservationQueue> map = new HashMap<>();
+		for (Entry<String, ReservationQueue> item : washerReservationQueues.entrySet()) {
 			if (!item.getValue()._non_existent())
 				map.put(item.getKey(), item.getValue());
 			else
 				map.remove(item.getKey());
 		}
 
-		return washers;
+		return washerReservationQueues;
 	}
 
-	public void setWashers(Map<String, Washer> washers) {
-		this.washers = washers;
+	public void setWashers(Map<String, ReservationQueue> washerReservationQueues) {
+		this.washerReservationQueues = washerReservationQueues;
 	}
 
 }
