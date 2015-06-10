@@ -1,12 +1,15 @@
 package kr.ac.ajou.lazybones.components;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
+import kr.ac.ajou.lazybones.washerapp.Washer.Reservation;
 import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueue;
 import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueueHelper;
 import kr.ac.ajou.lazybones.washerapp.Washer.Washer;
@@ -83,7 +86,7 @@ public class WasherManager {
 	public boolean removeWasher(String name) {
 		ReservationQueue washerQueue = washerReservationQueues.get(name);
 		if (washerQueue != null) {
-			if (!(washerQueue._non_existent()))
+			if (!washerQueue._non_existent())
 				washerQueue._release();
 
 			washerReservationQueues.remove(name);
@@ -98,14 +101,44 @@ public class WasherManager {
 			if (!item.getValue()._non_existent())
 				map.put(item.getKey(), item.getValue());
 			else
-				map.remove(item.getKey());
+				washerReservationQueues.remove(item.getKey());
 		}
 
-		return washerReservationQueues;
+		return map;
+	}
+	
+	public Map<String, Integer> getWasherSubscriberNumbers(){
+		Map<String, Integer> map = new HashMap<>();
+		for (Entry<String, ReservationQueue> item : washerReservationQueues.entrySet()) {
+			if (!item.getValue()._non_existent())
+				map.put(item.getKey(), item.getValue().size());
+			else
+				washerReservationQueues.remove(item.getKey());
+		}
+		System.out.println(map);
+
+		return map;
+		
+	}
+	
+	public Set<String> getReservationQueueNames(){
+		return washerReservationQueues.keySet();
+	}
+	
+	public ReservationQueue getReservationQueue(String name){
+		return washerReservationQueues.get(name);
 	}
 
 	public void setWashers(Map<String, ReservationQueue> washerReservationQueues) {
 		this.washerReservationQueues = washerReservationQueues;
 	}
-
+	
+	public void enqueue(String washerName, String who, long duration){
+		washerReservationQueues.get("name").enqueue(who, duration);
+	}
+	
+	public void remove(String washerName, int index){
+		washerReservationQueues.get("name").remove(index);
+	}
+	
 }

@@ -50,37 +50,17 @@
 		<div class="docs-section">
 			<!-- Inflate search results here -->
 			<div class="row" style="text-align: center;">
-				<div class="four columns">
-					<a href="<c:url value="Washer/Detail/Power"/>"> <image
-							class="u-max-full-width" src="<c:url value="/images/washer.png"/>"></a>
-					<h5>Name, 0 people waiting</h5>
-
-				</div>
-				<div class="four columns">
-					<image class="u-max-full-width" src="<c:url value="/images/washer_busy.png"/>">
-					<h5>Name, 2 people waiting</h5>
-				</div>
-				<div class="four columns">
-					<image class="u-max-full-width" src="<c:url value="/images/washer.png"/>">
-					<h5>Name, 0 people waiting</h5>
-				</div>
+				<c:forEach items="${washers}" var="entry">
+					<div class="four columns">
+						<a href="<c:url value="/Washer/Detail/${entry.key}"/>"> <img
+								class="u-max-full-width"
+								src="<c:url value="/images/washer.png"/>"></a>
+						<h5>
+							<b>${entry.key}</b><br>${entry.value} people waiting
+						</h5>
+					</div>
+				</c:forEach>
 			</div>
-
-			<div class="row" style="text-align: center;">
-				<div class="four columns">
-					<image class="u-max-full-width" src="<c:url value="/images/washer_reallybusy.png"/>">
-					<h5>Name, 6 people waiting</h5>
-				</div>
-				<div class="four columns">
-					<image class="u-max-full-width" src="<c:url value="images/washer_reallybusy.png"/>">
-					<h5>Name, 10 people waiting</h5>
-				</div>
-				<div class="four columns">
-					<image class="u-max-full-width" src="<c:url value="images/washer_busy.png"/>">
-					<h5>Name, 2 people waiting</h5>
-				</div>
-			</div>
-
 
 		</div>
 
