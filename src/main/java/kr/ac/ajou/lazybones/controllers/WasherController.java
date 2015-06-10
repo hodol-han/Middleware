@@ -24,7 +24,7 @@ public class WasherController {
 	@RequestMapping(value = "/Washer", method = RequestMethod.GET)
 	public String showWashers(Model model) {
 
-		Map<String, Washer> map = washerManager.getWashers();
+		Map<String, ReservationQueue> map = washerManager.getReservationQueues();
 		model.addAttribute("washers", map);
 
 		return "washerList";
@@ -33,19 +33,12 @@ public class WasherController {
 	@RequestMapping(value = "/Washer/Detail/{Name}", method = RequestMethod.GET)
 	public String showWasherDetail(@PathVariable("Name") String name,
 			Model model) {
-		Map<String, Washer> map = washerManager.getWashers();
-		Washer washer = map.get(name);
-		if (washer == null) {
+		Map<String, ReservationQueue> map = washerManager.getReservationQueues();
+		ReservationQueue reservationQueue = map.get(name);
+		if (reservationQueue == null) {
 			// ERROR HANDLING
 		}
-		model.addAttribute("washer", washer);
-		ReservationQueue queue = washer.reservationQueue();
-		Reservation[] reservations = queue.reservations();
-
-		{
-			String who = reservations[0].who;
-			Long duration = reservations[0].duration;
-		}
+		model.addAttribute("queue", reservationQueue);
 
 		return "washerDetail";
 	}

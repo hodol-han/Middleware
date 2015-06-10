@@ -92,7 +92,7 @@ public class WasherManager {
 		return false;
 	}
 
-	public Map<String, ReservationQueue> getWashers() {
+	public Map<String, ReservationQueue> getReservationQueues() {
 		Map<String, ReservationQueue> map = new HashMap<>();
 		for (Entry<String, ReservationQueue> item : washerReservationQueues.entrySet()) {
 			if (!item.getValue()._non_existent())
