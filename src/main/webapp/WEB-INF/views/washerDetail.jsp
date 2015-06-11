@@ -65,7 +65,7 @@
 							int i = 0;
 						%>
 						<c:forEach items="${reservations}" var="reservation">
-							<li>${reservation.who},${reservation.duration/60000}
+							<li>${reservation.who},${reservation.duration/60}
 								minute(s) <c:if
 									test="${reservation.who eq '${sessionScope.userid}'}">" "
 						<a href="<c:url value="/Washer/Cancel/${name}/${i}"/>">X</a>

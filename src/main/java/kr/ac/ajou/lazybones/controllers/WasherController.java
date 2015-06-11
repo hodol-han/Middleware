@@ -42,7 +42,7 @@ public class WasherController {
 		Reservation[] reservations = queue.reservations();
 		model.addAttribute("name", name);
 		model.addAttribute("size", reservations.length);
-		model.addAttribute("queue", reservations);
+		model.addAttribute("reservations", reservations);
 
 		return "washerDetail";
 	}
@@ -55,7 +55,7 @@ public class WasherController {
 		String who = (String) request.getSession().getAttribute("userid");
 
 		ReservationQueue queue = washerManager.getReservationQueue(name);
-		queue.enqueue(who, duration);
+		queue.enqueue(who, duration*60);
 
 		return "redirect:/Washer/Detail/" + name;
 	}
