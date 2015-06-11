@@ -64,45 +64,9 @@ public class WasherManager {
 			org.omg.CORBA.Object objRef = orb
 					.resolve_initial_references("NameService");
 			ncRef = NamingContextExtHelper.narrow(objRef);
-			
-			getWasherFromServer();
 
-			/*
-			 * Get registered washers from orbd and insert into
-			 * washerReservationQueues
-			 * 
-			 * reference:
-			 * http://www.massapi.com/class/org/omg/CosNaming/BindingListHolder
-			 * .html
-			 * http://www.informit.com/articles/article.aspx?p=23266&seqNum=9
-			 */
-
-			/*
-			 * For getting list of registered washers in from orbd
-			 */
-			/*
-			 * BindingListHolder bl = new BindingListHolder();
-			 * BindingIteratorHolder blIt = new BindingIteratorHolder();
-			 * ncRef.list(1000, bl, blIt); Binding bindings[] = bl.value;
-			 * ReservationQueue reservationQueue;
-			 * 
-			 * // Store every registered washer and its queue for (int i = 0; i
-			 * < bindings.length; i++) { int lastIx =
-			 * bindings[i].binding_name.length - 1; // check to see if this is a
-			 * naming context with Object type if (bindings[i].binding_type ==
-			 * BindingType.nobject) { String washerName =
-			 * bindings[i].binding_name[lastIx].id; reservationQueue =
-			 * ReservationQueueHelper.narrow(ncRef .resolve_str(washerName));
-			 * washerReservationQueues.put(washerName, reservationQueue); } }
-			 * 
-			 * // Print washer list for test Iterator<String> iterator =
-			 * washerReservationQueues.keySet() .iterator(); while
-			 * (iterator.hasNext()) { String key = iterator.next();
-			 * System.out.println("key=" + key); Reservation[] reservations =
-			 * washerReservationQueues.get(key).reservations(); for(Reservation
-			 * reservation : reservations) { System.out.println("who: " +
-			 * reservation.who + ", duration: " + reservation.duration); } }
-			 */
+			// Test for Getting registered washers from orbd
+			// testGettingWasherFromServer();
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e);
 			e.printStackTrace(System.out);
@@ -110,6 +74,7 @@ public class WasherManager {
 	}
 
 	public boolean addWasher(String name) {
+		System.out.println(name);
 		ReservationQueue washer;
 		try {
 			washer = ReservationQueueHelper.narrow(ncRef.resolve_str(name));
@@ -158,22 +123,15 @@ public class WasherManager {
 		return map;
 	}
 
-	public boolean getWasherFromServer() {
+	/*
+	 * This is for test.
+	 * Getting registered washers from orbd and into washerReservationQueues.
+	 * <reference>
+	 * http://www.massapi.com/class/org/omg/CosNaming/BindingListHolder.html
+	 * http://www.informit.com/articles/article.aspx?p=23266&seqNum=9
+	 */
+	public boolean testGettingWasherFromServer() {
 		try {
-			/*
-			 * Get registered washers from orbd and insert into
-			 * washerReservationQueues
-			 * 
-			 * reference:
-			 * http://www.massapi.com/class/org/omg/CosNaming/BindingListHolder
-			 * .html
-			 * http://www.informit.com/articles/article.aspx?p=23266&seqNum=9
-			 */
-
-			/*
-			 * For getting list of registered washers in from orbd
-			 */
-
 			BindingListHolder bl = new BindingListHolder();
 			BindingIteratorHolder blIt = new BindingIteratorHolder();
 			ncRef.list(1000, bl, blIt);
@@ -215,8 +173,9 @@ public class WasherManager {
 	}
 
 	public Map<String, Integer> getWasherSubscriberNumbers() {
-		getWasherFromServer();
-		
+		// Test for getting washer from orbd
+		//testGettingWasherFromServer();
+
 		Map<String, Integer> map = new HashMap<>();
 		for (Entry<String, ReservationQueue> item : washerReservationQueues
 				.entrySet()) {
