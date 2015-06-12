@@ -65,8 +65,8 @@ public class WasherManager {
 					.resolve_initial_references("NameService");
 			ncRef = NamingContextExtHelper.narrow(objRef);
 
-			// Test for Getting registered washers from orbd
-			// testGettingWasherFromServer();
+			// Getting registered washers from orbd
+			getWasherFromServer();
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e);
 			e.printStackTrace(System.out);
@@ -124,13 +124,12 @@ public class WasherManager {
 	}
 
 	/*
-	 * This is for test.
-	 * Getting registered washers from orbd and into washerReservationQueues.
-	 * <reference>
+	 * This is for test. Getting registered washers from orbd and into
+	 * washerReservationQueues. <reference>
 	 * http://www.massapi.com/class/org/omg/CosNaming/BindingListHolder.html
 	 * http://www.informit.com/articles/article.aspx?p=23266&seqNum=9
 	 */
-	public boolean testGettingWasherFromServer() {
+	public boolean getWasherFromServer() {
 		try {
 			BindingListHolder bl = new BindingListHolder();
 			BindingIteratorHolder blIt = new BindingIteratorHolder();
@@ -174,14 +173,14 @@ public class WasherManager {
 
 	public Map<String, Integer> getWasherSubscriberNumbers() {
 		// Test for getting washer from orbd
-		//testGettingWasherFromServer();
+		// testGettingWasherFromServer();
 
 		Map<String, Integer> map = new HashMap<>();
 		for (Entry<String, ReservationQueue> item : washerReservationQueues
 				.entrySet()) {
-			if (!item.getValue()._non_existent())
+			if (!item.getValue()._non_existent()) {
 				map.put(item.getKey(), item.getValue().size());
-			else
+			} else
 				washerReservationQueues.remove(item.getKey());
 		}
 		System.out.println(map);
