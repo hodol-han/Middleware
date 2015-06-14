@@ -67,8 +67,8 @@
 						<c:forEach items="${reservations}" var="reservation">
 							<li>${reservation.who}, ${reservation.duration}
 								minute(s) <c:if
-									test="${reservation.who eq '${sessionScope.userid}'}">" "
-						<a href="<c:url value="/Washer/Cancel/${name}/${i}"/>">X</a>
+									test="${reservation.who == sessionScope.userid}">
+						<a href="<c:url value="/Washer/Cancel/${name}/${i}"/>">Cancel</a>
 								</c:if>
 							</li>
 							<%
@@ -166,7 +166,7 @@
 														* multiplier;
 
 												$("#duration").val(
-														duration.toFixed(2));
+														duration.toFixed(0));
 											});
 						</script>
 
