@@ -13,7 +13,7 @@ import java.util.Map;
 import javax.annotation.PostConstruct;
 
 import kr.ac.ajou.lazybones.DataStructure.ServiceForPA;
-import kr.ac.ajou.lazybones.DataStructure.ServiceProviderForPA;
+//import kr.ac.ajou.lazybones.DataStructure.ServiceProviderForPA;
 
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -48,19 +48,19 @@ public class ReservationRESTController {
 	public void RegisterServiceProvider(){
 		
 		
-		//map = new HashMap<String, String>();
-		//map.put("SPname", "WasherManPost");
-		//map.put("Uri","GetServicesRegisterEntry1" );
-		//Register Service Provider when initiation.
-		//(Include SP name, and the place where can get the services from uri.)
-		//String result = restTempleate.getForObject(getregAddress, String.class, map);
-		
-		
-		//Post method
-		ServiceProviderForPA sp = new ServiceProviderForPA(SPname, Uri);
-		URI result1 = restTempleate.postForLocation(postregAddress, sp);
-		System.out.println(result1);
-		
+//		//map = new HashMap<String, String>();
+//		//map.put("SPname", "WasherManPost");
+//		//map.put("Uri","GetServicesRegisterEntry1" );
+//		//Register Service Provider when initiation.
+//		//(Include SP name, and the place where can get the services from uri.)
+//		//String result = restTempleate.getForObject(getregAddress, String.class, map);
+//		
+//		
+//		//Post method
+//		ServiceProviderForPA sp = new ServiceProviderForPA(SPname, Uri);
+//		URI result1 = restTempleate.postForLocation(postregAddress, sp);
+//		System.out.println(result1);
+//		
 		
 	}
 	

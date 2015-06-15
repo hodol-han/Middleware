@@ -31,6 +31,8 @@
 <!-- JavaScript
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <!-- embed jQuery javascript file here -->
+<script src="<c:url value="/js/jquery-1.11.3.min.js"/>"
+	type="text/javascript"></script>
 
 
 <!-- Favicon
@@ -50,8 +52,8 @@
 		<div class="docs-section">
 			<!-- Inflate search results here -->
 			<div class="row" style="text-align: center;">
-				<c:forEach items="${washers}" var="entry">
-					<div class="four columns">
+				<c:forEach items="${washers}" var="entry" varStatus="status">
+					<div class="four columns" <c:if test="${status.index %3 == 0}">style="margin-left:0"</c:if> >
 						<a href="<c:url value="/Washer/Detail/${entry.key}"/>"> <img
 								class="u-max-full-width"
 								src="<c:url value="/images/washer.png"/>"></a>
@@ -61,7 +63,7 @@
 					</div>
 				</c:forEach>
 			</div>
-
+			
 		</div>
 
 	</div>

@@ -62,7 +62,7 @@ public class WasherController {
 		return "redirect:/Washer/Detail/" + name;
 	}
 
-	@RequestMapping(value = "/Washer/Cancel/{Name}/{Index}", method = RequestMethod.POST)
+	@RequestMapping(value = "/Washer/Cancel/{Name}/{Index}", method = RequestMethod.GET)
 	public String cancelReservation(@PathVariable("Name") String name,
 			@PathVariable("Index") int index, Model model,
 			HttpServletRequest request) {

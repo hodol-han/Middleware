@@ -64,11 +64,11 @@
 						<%
 							int i = 0;
 						%>
-						<c:forEach items="${reservations}" var="reservation">
+						<c:forEach items="${reservations}" var="reservation" varStatus="status">
 							<li>${reservation.who}, ${reservation.duration}
 								minute(s) <c:if
 									test="${reservation.who == sessionScope.userid}">
-						<a href="<c:url value="/Washer/Cancel/${name}/${i}"/>">Cancel</a>
+						<a href="<c:url value="/Washer/Cancel/${name}/${status.index}"/>">Cancel</a>
 								</c:if>
 							</li>
 							<%
@@ -112,7 +112,7 @@
 						class="button button-primary" type="submit" value="Enqueue!">
 				</form>
 				<button id="idunnohowlongittakes">Don't you know how long
-					does it take?</button>
+					it takes?</button>
 				<script>
 					$("#idunnohowlongittakes").click(function() {
 						if ($("#calculateplz").is(":visible"))
