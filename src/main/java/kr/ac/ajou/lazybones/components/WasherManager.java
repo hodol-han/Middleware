@@ -142,6 +142,11 @@ public class WasherManager {
 		}
 	}
 
+	/**
+	 * Deprecated due to the automated synchronization
+	 * @param name
+	 * @return
+	 */
 	public boolean addWasher(String name) {
 		System.out.println(name);
 		ReservationQueue washer;
@@ -167,6 +172,11 @@ public class WasherManager {
 		return false;
 	}
 
+	/**
+	 * Deprecated due to the automated synchronization
+	 * @param name
+	 * @return
+	 */
 	public boolean removeWasher(String name) {
 		ReservationQueue washerQueue = washerReservationQueues.get(name);
 		if (washerQueue != null) {
@@ -185,8 +195,6 @@ public class WasherManager {
 				.entrySet()) {
 			if (!item.getValue()._non_existent())
 				map.put(item.getKey(), item.getValue());
-			else
-				washerReservationQueues.remove(item.getKey());
 		}
 
 		return map;
