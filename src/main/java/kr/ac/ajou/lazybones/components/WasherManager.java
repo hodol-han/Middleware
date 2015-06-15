@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.annotation.PostConstruct;
 
@@ -34,9 +36,75 @@ public class WasherManager {
 	private final String host = "210.107.197.213";
 
 	private Map<String, ReservationQueue> washerReservationQueues;
-	ReservationQueue reservationQueue;
 
+	private Timer timer = new Timer();
 	private NamingContextExt ncRef;
+
+	private class RefreshTask extends TimerTask {
+
+		private WasherManager manager;
+
+		public RefreshTask(WasherManager manager) {
+			this.manager = manager;
+		}
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			getWasherFromServer();
+		}
+
+		/*
+		 * This is for test. Getting registered washers from orbd and into
+		 * washerReservationQueues. <reference>
+		 * http://www.massapi.com/class/org/omg/CosNaming/BindingListHolder.html
+		 * http://www.informit.com/articles/article.aspx?p=23266&seqNum=9
+		 */
+		private boolean getWasherFromServer() {
+			Map<String, ReservationQueue> map = new HashMap<>();
+			try {
+				BindingListHolder bl = new BindingListHolder();
+				BindingIteratorHolder blIt = new BindingIteratorHolder();
+				ncRef.list(1000, bl, blIt);
+				Binding bindings[] = bl.value;
+				ReservationQueue reservationQueue;
+
+				// Store every registered washer and its queue
+				for (int i = 0; i < bindings.length; i++) {
+					int lastIx = bindings[i].binding_name.length - 1;
+					// check to see if this is a naming context with Object type
+					if (bindings[i].binding_type == BindingType.nobject) {
+						String washerName = bindings[i].binding_name[lastIx].id;
+						reservationQueue = ReservationQueueHelper.narrow(ncRef
+								.resolve_str(washerName));
+						map.put(washerName, reservationQueue);
+					}
+				}
+
+				// Set current map of ReservationQueue into WasherManager
+				manager.setWashers(map);
+
+				// // Print washer list for test
+				// Iterator<String> iterator = map.keySet()
+				// .iterator();
+				// while (iterator.hasNext()) {
+				// String key = iterator.next();
+				// System.out.println("key=" + key);
+				// Reservation[] reservations = map.get(key)
+				// .reservations();
+				// for (Reservation reservation : reservations) {
+				// System.out.println("who: " + reservation.who
+				// + ", duration: " + reservation.duration);
+				// }
+				// }
+			} catch (Exception e) {
+				e.printStackTrace();
+				return false;
+			}
+			return true;
+		}
+
+	}
 
 	// It connects to orbd and set NamingContext reference.
 	// It will be used for adding washers.
@@ -65,14 +133,20 @@ public class WasherManager {
 					.resolve_initial_references("NameService");
 			ncRef = NamingContextExtHelper.narrow(objRef);
 
-			// Getting registered washers from orbd
-			getWasherFromServer();
+			// get registered washers from orbd at fixed rate (5000)
+			timer.scheduleAtFixedRate(new RefreshTask(this), 0, 5000);
+
 		} catch (Exception e) {
 			System.out.println("ERROR : " + e);
 			e.printStackTrace(System.out);
 		}
 	}
 
+	/**
+	 * Deprecated due to the automated synchronization
+	 * @param name
+	 * @return
+	 */
 	public boolean addWasher(String name) {
 		System.out.println(name);
 		ReservationQueue washer;
@@ -98,6 +172,11 @@ public class WasherManager {
 		return false;
 	}
 
+	/**
+	 * Deprecated due to the automated synchronization
+	 * @param name
+	 * @return
+	 */
 	public boolean removeWasher(String name) {
 		ReservationQueue washerQueue = washerReservationQueues.get(name);
 		if (washerQueue != null) {
@@ -116,72 +195,24 @@ public class WasherManager {
 				.entrySet()) {
 			if (!item.getValue()._non_existent())
 				map.put(item.getKey(), item.getValue());
-			else
-				washerReservationQueues.remove(item.getKey());
 		}
 
 		return map;
 	}
 
-	/*
-	 * This is for test. Getting registered washers from orbd and into
-	 * washerReservationQueues. <reference>
-	 * http://www.massapi.com/class/org/omg/CosNaming/BindingListHolder.html
-	 * http://www.informit.com/articles/article.aspx?p=23266&seqNum=9
-	 */
-	public boolean getWasherFromServer() {
-		try {
-			BindingListHolder bl = new BindingListHolder();
-			BindingIteratorHolder blIt = new BindingIteratorHolder();
-			ncRef.list(1000, bl, blIt);
-			Binding bindings[] = bl.value;
-			ReservationQueue reservationQueue;
-
-			// Store every registered washer and its queue
-			for (int i = 0; i < bindings.length; i++) {
-				int lastIx = bindings[i].binding_name.length - 1;
-				// check to see if this is a naming context with Object type
-				if (bindings[i].binding_type == BindingType.nobject) {
-					String washerName = bindings[i].binding_name[lastIx].id;
-					reservationQueue = ReservationQueueHelper.narrow(ncRef
-							.resolve_str(washerName));
-					washerReservationQueues.put(washerName, reservationQueue);
-				}
-			}
-
-			// Print washer list for test
-			Iterator<String> iterator = washerReservationQueues.keySet()
-					.iterator();
-			while (iterator.hasNext()) {
-				String key = iterator.next();
-				System.out.println("key=" + key);
-				Reservation[] reservations = washerReservationQueues.get(key)
-						.reservations();
-				for (Reservation reservation : reservations) {
-					System.out.println("who: " + reservation.who
-							+ ", duration: " + reservation.duration);
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-
-		return true;
-
-	}
-
 	public Map<String, Integer> getWasherSubscriberNumbers() {
 		// Test for getting washer from orbd
 		// testGettingWasherFromServer();
+		System.out.println(washerReservationQueues);
 
 		Map<String, Integer> map = new HashMap<>();
 		for (Entry<String, ReservationQueue> item : washerReservationQueues
 				.entrySet()) {
-			if (!item.getValue()._non_existent()) {
+			try {
 				map.put(item.getKey(), item.getValue().size());
-			} else
-				washerReservationQueues.remove(item.getKey());
+			} catch (Exception e) {
+				System.out.println("Some problem exists on " + item.getKey());
+			}
 		}
 		System.out.println(map);
 
