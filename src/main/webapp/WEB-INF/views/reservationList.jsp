@@ -1,5 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -63,35 +63,16 @@
 				</thead>
 
 				<tbody id="books">
-
-					<c:forEach items="${washers}" var="entry" varStatus="status">
+					<c:forEach items="${reservations}" var="entry" varStatus="status">
 						<c:forEach items="${entry.value}" var="resv">
-							<td><c:out value="${entry.key}"></c:out></td>
-							<td><c:out value="${resv.washerName}"></c:out></td>
-							<td><c:out value="${resv.duration}"></c:out></td>
+							<tr>
+								<td><c:out value="${entry.key}"></c:out></td>
+								<td><fmt:formatDate value="${resv.from}" pattern="yy-MM-dd HH:mm"/> ~ 
+								<fmt:formatDate value="${resv.to}" pattern="yy-MM-dd HH:mm"/></td>
+								<td><a href="<c:url value="/Washer/Detail/${entry.key}"/>">Detail</a></td>
+							</tr>
 						</c:forEach>
-					
-						<div class="four columns" <c:if test="${status.index %3 == 0}">style="margin-left:0"</c:if> >
-							<a href="<c:url value="/Washer/Detail/${entry.key}"/>"> <img
-									class="u-max-full-width"
-									src="<c:url value="/images/washer.png"/>"></a>
-							<h5>
-								<b>${entry.key}</b><br>${entry.value} people waiting
-							</h5>
-					</div>
 					</c:forEach>
-
-
-
-					<c:forEach items="${reservations}" var="reservation">
-						<tr>
-							<td><c:out value="${reservations.washerName}"></c:out></td>
-							<td><c:out value="${reservation.duration}"></c:out></td>
-							<td><a href="<c:url value="/Washer/${reservation.washerName}"/>">Detail</a></td>
-						</tr>
-					</c:forEach>
-
-
 				</tbody>
 			</table>
 		</div>

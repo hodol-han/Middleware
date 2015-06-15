@@ -1,10 +1,14 @@
 package kr.ac.ajou.lazybones.controllers;
 
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 
 import kr.ac.ajou.lazybones.components.WasherManager;
+import kr.ac.ajou.lazybones.repos.entities.RealReservation;
 import kr.ac.ajou.lazybones.washerapp.Washer.Reservation;
 import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueue;
 
@@ -20,27 +24,18 @@ public class ReservationController {
 
 	@Autowired
 	WasherManager washerManager;
-	
-	private Map<String, Reservation[]> reservations = null;
 
 	@RequestMapping(value = "/Reservation", method = RequestMethod.GET)
 	public String showReservation(HttpServletRequest request, Model model) {
-
-		// For getting washer name list
-		Map<String, Integer> map = washerManager.getWasherSubscriberNumbers();
 		
 		// User ID (session)
 		String uid = (String) request.getSession().getAttribute("userid");
-		
-		// Iter for each washer
-		for( String key : map.keySet() ){
-			ReservationQueue queue = washerManager.getReservationQueue(key);
-			Reservation[] reservation = queue.reservationsBy(uid);
-			reservations.put(key, reservation);
-        }
-		
-		model.addAttribute("reservations", reservations);
 
-		return "washerList";
+		//Reservations (Expected 'real' time rather than duration)
+		Map<String, RealReservation[]> map = washerManager.getRealReservationsBy(uid);
+
+		model.addAttribute("reservations", map);
+
+		return "reservationList";
 	}
 }

@@ -72,7 +72,6 @@ public class WasherController {
 
 		return "redirect:/Washer/Detail/" + name;
 	}
-
 	
 	@RequestMapping(value = "/Washer/Register/{Name}", method = RequestMethod.GET)
 	@ResponseBody

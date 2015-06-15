@@ -1,7 +1,11 @@
 package kr.ac.ajou.lazybones.components;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Properties;
@@ -11,6 +15,7 @@ import java.util.TimerTask;
 
 import javax.annotation.PostConstruct;
 
+import kr.ac.ajou.lazybones.repos.entities.RealReservation;
 import kr.ac.ajou.lazybones.washerapp.Washer.Reservation;
 import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueue;
 import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueueHelper;
@@ -144,6 +149,7 @@ public class WasherManager {
 
 	/**
 	 * Deprecated due to the automated synchronization
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -174,6 +180,7 @@ public class WasherManager {
 
 	/**
 	 * Deprecated due to the automated synchronization
+	 * 
 	 * @param name
 	 * @return
 	 */
@@ -238,6 +245,64 @@ public class WasherManager {
 
 	public void remove(String washerName, int index) {
 		washerReservationQueues.get("name").remove(index);
+	}
+
+	public Map<String, Reservation[]> getReservationWaitingTimes() {
+
+		Map<String, Reservation[]> map = new HashMap<>();
+		for (Entry<String, ReservationQueue> item : washerReservationQueues
+				.entrySet()) {
+			if (!item.getValue()._non_existent())
+				map.put(item.getKey(), item.getValue()
+						.reservationWaitingTimes());
+		}
+
+		return map;
+	}
+
+	public Map<String, Reservation[]> getReservationWaitingTimesBy(String who) {
+
+		Map<String, Reservation[]> map = new HashMap<>();
+		for (Entry<String, ReservationQueue> item : washerReservationQueues
+				.entrySet()) {
+			if (!item.getValue()._non_existent())
+				map.put(item.getKey(), item.getValue()
+						.reservationWaitingTimesBy(who));
+		}
+
+		return map;
+	}
+
+	public Map<String, RealReservation[]> getRealReservationsBy(String who) {
+		Map<String, RealReservation[]> map = new HashMap<>();
+		Calendar now = Calendar.getInstance();
+
+		for (Entry<String, ReservationQueue> entry : this.washerReservationQueues
+				.entrySet()) {
+			String washerName = entry.getKey();
+			ReservationQueue queue = entry.getValue();
+			long accumulatedTime = 0l;
+			
+			List<RealReservation> list = new ArrayList<>();
+			for (Reservation reservation : queue.reservations()) {
+				Calendar temp = (Calendar) now.clone();
+				
+				temp.add(Calendar.MINUTE, (int) accumulatedTime);
+				Date from = (Date) temp.getTime().clone();
+				temp.add(Calendar.MINUTE, (int)reservation.getDuration());
+				Date to = (Date) temp.getTime().clone();
+				
+				accumulatedTime += reservation.getDuration();
+										
+				if(reservation.getWho().equals(who)){				
+					RealReservation realReservation = new RealReservation(washerName, who, from, to);
+					list.add(realReservation);
+				}
+			}
+			map.put(washerName, list.toArray(new RealReservation[list.size()]));
+		}
+		return map;
+
 	}
 
 }
