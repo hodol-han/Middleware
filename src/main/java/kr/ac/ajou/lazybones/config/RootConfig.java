@@ -11,6 +11,11 @@ import org.springframework.core.type.filter.RegexPatternTypeFilter;
 
 import kr.ac.ajou.lazybones.config.RootConfig.WebPackage;
 
+/**
+ * Class for root configuration. Includes DataConfig.
+ * @author AJOU
+ *
+ */
 @Configuration
 @Import(DataConfig.class)
 @ComponentScan(basePackages = { "kr.ac.ajou.lazybones" }, excludeFilters = { @Filter(type = FilterType.CUSTOM, value = WebPackage.class) })

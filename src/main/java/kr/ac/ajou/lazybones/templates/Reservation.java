@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * It does not have any database yet.
+ * Reservation template for REST service.
  *
  * @author Han
  */

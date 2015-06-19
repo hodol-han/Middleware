@@ -2,42 +2,39 @@ package kr.ac.ajou.lazybones.templates;
 
 import java.io.Serializable;
 
-
 /**
- *
+ * Registration form for Personal Assistant System
+ * 
  * @author Han
  */
-public class ServiceProviderRegistrationForm implements Serializable{
+public class ServiceProviderRegistrationForm implements Serializable {
 
-    public String getSp() {
-        return sp;
-    }
+	public String getSp() {
+		return sp;
+	}
 
-    public void setSp(String sp) {
-        this.sp = sp;
-    }
+	public void setSp(String sp) {
+		this.sp = sp;
+	}
 
-    public Service[] getServices() {
-        return services;
-    }
+	public Service[] getServices() {
+		return services;
+	}
 
-    public void setServices(Service[] services) {
-        this.services = services;
-    }
+	public void setServices(Service[] services) {
+		this.services = services;
+	}
 
-    private String sp;
-    private Service[] services;
-    private ReservationService[] reservationServices;
+	private String sp;
+	private Service[] services;
+	private ReservationService[] reservationServices;
 
-    public ReservationService[] getReservationServices() {
-        return reservationServices;
-    }
+	public ReservationService[] getReservationServices() {
+		return reservationServices;
+	}
 
-    public void setReservationServices(ReservationService[] reservationServices) {
-        this.reservationServices = reservationServices;
-    }
-    
-    
-    
-    
+	public void setReservationServices(ReservationService[] reservationServices) {
+		this.reservationServices = reservationServices;
+	}
+
 }

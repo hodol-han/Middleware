@@ -14,7 +14,7 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
 /**
- * Class for configuration.  
+ * Class for configuration for JPA repository.
  * @author AJOU
  *
  */

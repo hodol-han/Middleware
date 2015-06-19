@@ -1,7 +1,12 @@
-package kr.ac.ajou.lazybones.repos.entities;
+package kr.ac.ajou.lazybones.templates;
 
 import java.util.Date;
 
+/**
+ * Reservation (Actual expected time) template
+ * @author AJOU
+ *
+ */
 public class RealReservation {
 	
 	private String machine;

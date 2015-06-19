@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+/**
+ * Controller class for washer. List washers, view detail of washer, make a reservation.
+ * @author AJOU
+ *
+ */
 @Controller
 public class WasherController {
 
@@ -49,6 +54,14 @@ public class WasherController {
 		return "washerDetail";
 	}
 
+	/**
+	 * Find appropriate queue and enqueue reservation into it.
+	 * @param name
+	 * @param duration
+	 * @param model
+	 * @param request
+	 * 
+	 */
 	@RequestMapping(value = "/Washer/Enqueue/{Name}", method = RequestMethod.POST)
 	public String enqueueReservation(@PathVariable("Name") String name,
 			@RequestParam(value = "duration") long duration, Model model,
@@ -62,6 +75,14 @@ public class WasherController {
 		return "redirect:/Washer/Detail/" + name;
 	}
 
+	/**
+	 * Find appropriate queue and cancel reservation with given index.
+	 * @param name
+	 * @param index
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping(value = "/Washer/Cancel/{Name}/{Index}", method = RequestMethod.GET)
 	public String cancelReservation(@PathVariable("Name") String name,
 			@PathVariable("Index") int index, Model model,
@@ -72,25 +93,6 @@ public class WasherController {
 
 		return "redirect:/Washer/Detail/" + name;
 	}
-	
-	@RequestMapping(value = "/Washer/Register/{Name}", method = RequestMethod.GET)
-	@ResponseBody
-	public String register(@PathVariable("Name") String name) {
-		// System.out.println(name);
 
-		if (washerManager.addWasher(name))
-			return "OK";
-		else
-			return "Failed";
-	}
-
-	@RequestMapping(value = "/Washer/Unregister/{Name}", method = RequestMethod.GET)
-	@ResponseBody
-	public String unregister(@PathVariable("Name") String name) {
-		if (washerManager.removeWasher(name))
-			return "OK";
-		else
-			return "Failed";
-	}
 
 }

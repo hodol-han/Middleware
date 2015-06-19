@@ -9,7 +9,7 @@ import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 
 import kr.ac.ajou.lazybones.components.WasherManager;
-import kr.ac.ajou.lazybones.repos.entities.RealReservation;
+import kr.ac.ajou.lazybones.templates.RealReservation;
 import kr.ac.ajou.lazybones.templates.Reservation;
 import kr.ac.ajou.lazybones.templates.ReservationService;
 import kr.ac.ajou.lazybones.templates.Result;
@@ -31,8 +31,11 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Controller
-// This Component will send the information about this Service Provider when SP
-// server initiated.
+/**
+ *  This Component will send the information about this Service Provider to Personal Assistant system when the server initiated.
+ * @author AJOU
+ *
+ */
 public class ReservationRESTController {
 
 	private String registrationAddress = "http://210.107.197.150:8080/PAmanager/webresources/Service/Register";// PA(Personal
@@ -113,12 +116,11 @@ public class ReservationRESTController {
 
 	}
 
-	@PreDestroy
-	public void unregisterServiceProvider() {
-		// Unregister service provider when destroy
-
-	}
-
+	/**
+	 * Fetch reservations(actual time) from queues and merge them into one list. 
+	 * @param uid
+	 * @return
+	 */
 	@RequestMapping(value = "/REST/Reservations", method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
 	@ResponseBody
 	public List<Reservation> getReservations(@RequestBody String uid) {
@@ -128,20 +130,18 @@ public class ReservationRESTController {
 		for (Entry<String, RealReservation[]> entry : map.entrySet()) {
 			List<Reservation> subReservations = new ArrayList<>();
 			for (RealReservation item : entry.getValue()) {
+				
+				//Convert into kr.ac.ajou.lazybones.templates.Reservation class.
 				Reservation reservation = new Reservation();
 				reservation.setName(item.getMachine());
 				reservation.setFrom(item.getFrom());
 				reservation.setTo(item.getTo());
+				
 				subReservations.add(reservation);
 			}
 			reservations.addAll(subReservations);
 		}
 		return reservations;
 	}
-	//
-	// @RequestMapping(value = "/GetServicesRegisterEntry/{Name}", method =
-	// RequestMethod.GET)
-	// public void getServices(){
-	//
-	// }
+
 }

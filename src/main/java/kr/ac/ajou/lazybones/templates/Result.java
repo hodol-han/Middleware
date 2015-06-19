@@ -3,7 +3,7 @@ package kr.ac.ajou.lazybones.templates;
 import java.io.Serializable;
 
 /**
- *
+ * Result for requests to Personal Assistant System 
  * @author Ethan
  */
 public class Result implements Serializable {

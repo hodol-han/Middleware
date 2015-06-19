@@ -15,7 +15,7 @@ import java.util.TimerTask;
 
 import javax.annotation.PostConstruct;
 
-import kr.ac.ajou.lazybones.repos.entities.RealReservation;
+import kr.ac.ajou.lazybones.templates.RealReservation;
 import kr.ac.ajou.lazybones.washerapp.Washer.Reservation;
 import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueue;
 import kr.ac.ajou.lazybones.washerapp.Washer.ReservationQueueHelper;
@@ -34,6 +34,12 @@ import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+/**
+ * Actual management component for Washers.
+ * 
+ * @author AJOU
+ *
+ */
 @Component
 @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
 public class WasherManager {
@@ -59,9 +65,11 @@ public class WasherManager {
 			getWasherFromServer();
 		}
 
-		/*
-		 * This is for test. Getting registered washers from orbd and into
-		 * washerReservationQueues. <reference>
+		/**
+		 * Getting registered washers from orbd and into
+		 * washerReservationQueues.
+		 * 
+		 * <reference>
 		 * http://www.massapi.com/class/org/omg/CosNaming/BindingListHolder.html
 		 * http://www.informit.com/articles/article.aspx?p=23266&seqNum=9
 		 */
@@ -111,8 +119,12 @@ public class WasherManager {
 
 	}
 
-	// It connects to orbd and set NamingContext reference.
-	// It will be used for adding washers.
+	/**
+	 * It connects to orbd and set NamingContext reference. It will be used for
+	 * adding washers.
+	 * 
+	 * @throws InvalidName
+	 */
 	@PostConstruct
 	public void setup() throws InvalidName {
 		// HashMap of <WasherName, ReservationQueue>
@@ -151,7 +163,7 @@ public class WasherManager {
 	 * Deprecated due to the automated synchronization
 	 * 
 	 * @param name
-	 * @return
+	 * @return Succeed or failed (T/F)
 	 */
 	public boolean addWasher(String name) {
 		System.out.println(name);
@@ -182,7 +194,7 @@ public class WasherManager {
 	 * Deprecated due to the automated synchronization
 	 * 
 	 * @param name
-	 * @return
+	 * @return Succeed or not (T/F)
 	 */
 	public boolean removeWasher(String name) {
 		ReservationQueue washerQueue = washerReservationQueues.get(name);
@@ -196,6 +208,10 @@ public class WasherManager {
 		return false;
 	}
 
+	/**
+	 * Retrieve existing ReservationQueues
+	 * @return
+	 */
 	public Map<String, ReservationQueue> getReservationQueues() {
 		Map<String, ReservationQueue> map = new HashMap<>();
 		for (Entry<String, ReservationQueue> item : washerReservationQueues
@@ -207,11 +223,16 @@ public class WasherManager {
 		return map;
 	}
 
+	/**
+	 * Retrieve existing Washers' name with number of subscribers.  
+	 * @return
+	 */
 	public Map<String, Integer> getWasherSubscriberNumbers() {
 		// Test for getting washer from orbd
 		// testGettingWasherFromServer();
 		System.out.println(washerReservationQueues);
 
+		// Iterate each ReservationQueue and fetch size of the waiting queue
 		Map<String, Integer> map = new HashMap<>();
 		for (Entry<String, ReservationQueue> item : washerReservationQueues
 				.entrySet()) {
@@ -227,26 +248,54 @@ public class WasherManager {
 
 	}
 
+	/**
+	 * Retrieve Reservation Queue names
+	 * @return
+	 */
 	public Set<String> getReservationQueueNames() {
 		return washerReservationQueues.keySet();
 	}
 
+	/**
+	 * Find reservation queue by name
+	 * @param name
+	 * @return Appropriate ReservationQueue or null 
+	 */
 	public ReservationQueue getReservationQueue(String name) {
 		return washerReservationQueues.get(name);
 	}
 
+	/**
+	 * Set washers by given map of washer queues.
+	 * @param washerReservationQueues
+	 */
 	public void setWashers(Map<String, ReservationQueue> washerReservationQueues) {
 		this.washerReservationQueues = washerReservationQueues;
 	}
 
+	/**
+	 * Enqueue reservation into target washer.
+	 * @param washerName
+	 * @param who
+	 * @param duration
+	 */
 	public void enqueue(String washerName, String who, long duration) {
 		washerReservationQueues.get("name").enqueue(who, duration);
 	}
 
+	/**
+	 * Remove reservation index from target washer.
+	 * @param washerName
+	 * @param index
+	 */
 	public void remove(String washerName, int index) {
 		washerReservationQueues.get("name").remove(index);
 	}
 
+	/**
+	 * Retrieve reservations of each queue with waiting time rather than duration. 
+	 * @return
+	 */
 	public Map<String, Reservation[]> getReservationWaitingTimes() {
 
 		Map<String, Reservation[]> map = new HashMap<>();
@@ -260,6 +309,11 @@ public class WasherManager {
 		return map;
 	}
 
+	/**
+	 * Retrieve reservations of each queue with waiting time rather than duration by user name.
+	 * @param who
+	 * @return
+	 */
 	public Map<String, Reservation[]> getReservationWaitingTimesBy(String who) {
 
 		Map<String, Reservation[]> map = new HashMap<>();
@@ -273,29 +327,43 @@ public class WasherManager {
 		return map;
 	}
 
+	/**
+	 * Retrieve reservations of each queue with expected time rather than duration by user name.
+	 * @param who
+	 * @return
+	 */
 	public Map<String, RealReservation[]> getRealReservationsBy(String who) {
 		Map<String, RealReservation[]> map = new HashMap<>();
 		Calendar now = Calendar.getInstance();
 
+		// Iterate each queue
 		for (Entry<String, ReservationQueue> entry : this.washerReservationQueues
 				.entrySet()) {
 			String washerName = entry.getKey();
 			ReservationQueue queue = entry.getValue();
-			long accumulatedTime = 0l;
 			
+			// For example: If Queue consists of {5, 10, 15, 20} and current time is 5 PM,
+			// then the list will be transformed into
+			// {	{from:"17:00", to:"17:05"},
+			//		{from:"17:05", to:"17:15"},
+			//		{from:"17:15", to:"17:30"},
+			//		{from:"17:30", to:"17:50"}	}
+			long accumulatedTime = 0l;
+
 			List<RealReservation> list = new ArrayList<>();
 			for (Reservation reservation : queue.reservations()) {
 				Calendar temp = (Calendar) now.clone();
-				
+
 				temp.add(Calendar.MINUTE, (int) accumulatedTime);
 				Date from = (Date) temp.getTime().clone();
-				temp.add(Calendar.MINUTE, (int)reservation.getDuration());
+				temp.add(Calendar.MINUTE, (int) reservation.getDuration());
 				Date to = (Date) temp.getTime().clone();
-				
+
 				accumulatedTime += reservation.getDuration();
-										
-				if(reservation.getWho().equals(who)){				
-					RealReservation realReservation = new RealReservation(washerName, who, from, to);
+
+				if (reservation.getWho().equals(who)) {
+					RealReservation realReservation = new RealReservation(
+							washerName, who, from, to);
 					list.add(realReservation);
 				}
 			}
