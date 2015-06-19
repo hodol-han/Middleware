@@ -28,6 +28,7 @@
 		<interceptor>
 			<mapping path="/User/Modify" />
 			<mapping path="/Washer/**" />
+			<mapping path="/Reservation" />
 			
 			<exclude-mapping path="/Washer/Register/*"/>
 			<exclude-mapping path="/Washer/Unregister/*"/>
