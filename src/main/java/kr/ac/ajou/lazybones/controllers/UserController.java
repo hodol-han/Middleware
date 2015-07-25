@@ -9,7 +9,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import kr.ac.ajou.lazybones.entitymanager.UserEntityManagerImpl;
+import kr.ac.ajou.lazybones.entitymanager.UserManagementUnit;
 import kr.ac.ajou.lazybones.repos.entities.User;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +22,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class UserController {
 
-	private UserEntityManagerImpl userEntityManagerImpl;
+	private UserManagementUnit userEntityManagerImpl;
 
 	@Autowired
-	public UserController(UserEntityManagerImpl userEntityManagerImpl) {
+	public UserController(UserManagementUnit userEntityManagerImpl) {
 		super();
 		this.userEntityManagerImpl = userEntityManagerImpl;
 	}
@@ -105,7 +105,14 @@ public class UserController {
 	 *  Show Login page.
 	 */
 	@RequestMapping(value = "/User/Login", method = RequestMethod.GET)
-	public String login() {
+	public String login(HttpServletRequest request) {
+		
+		Boolean isLoggedIn = (Boolean) request.getSession().getAttribute("logininfo");
+		
+		if(isLoggedIn != null)
+			if(isLoggedIn == true)
+				return "redirect:/";
+		
 		return "login";
 	}
 

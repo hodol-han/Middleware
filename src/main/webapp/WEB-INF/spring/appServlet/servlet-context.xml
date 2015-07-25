@@ -33,7 +33,7 @@
 			<exclude-mapping path="/Washer/Register/*"/>
 			<exclude-mapping path="/Washer/Unregister/*"/>
 				
-			<beans:bean class="kr.ac.ajou.lazybones.controllers.LoginInterceptor" />
+			<beans:bean class="kr.ac.ajou.lazybones.interceptors.AccessManagementUnit" />
 		</interceptor>
 	</interceptors>
 

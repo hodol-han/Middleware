@@ -38,10 +38,9 @@
   <div class="container">
     <section class="row header">
       <div class="six column">
-        <h1>Washerman</h1>
-        <p>Welcome to washer manager.</p>
-		<a class="button button-primary" href="<c:url value="/Washer"/>">Check current running washers</a>
-		<a class="button" href="<c:url value="/Reservation"/>">Check my reservations</a>
+        <h1>Middleware?</h1>
+        <p>Welcome to hell.</p>
+		<a class="button button-primary" href="<c:url value="/Node"/>">Your nodes</a>
       </div>
     </section>
   </div>
