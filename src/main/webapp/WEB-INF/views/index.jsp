@@ -40,7 +40,7 @@
       <div class="six column">
         <h1>Middleware?</h1>
         <p>Welcome to hell.</p>
-		<a class="button button-primary" href="<c:url value="/Node"/>">Your nodes</a>
+		<a class="button button-primary" href="<c:url value="/Node/List"/>">Your nodes</a>
       </div>
     </section>
   </div>

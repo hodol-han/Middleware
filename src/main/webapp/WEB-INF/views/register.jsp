@@ -43,7 +43,7 @@
 
 		<div class="docs-section">
 			<div style="text-align: center;">
-				<form method="post" action="<c:url value="/User/Register/"/>">
+				<form method="post" action="<c:url value="/User/Register"/>">
 					<div>
 						<label class="field-label">Id</label> <input id="id" name="id"
 							type="text" required="required">

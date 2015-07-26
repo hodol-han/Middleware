@@ -1,11 +1,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-
 <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <meta charset="utf-8">
@@ -30,14 +28,12 @@
 
 <!-- JavaScript
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<!-- embed jQuery javascript file here -->
-<script src="<c:url value="/js/jquery-1.11.3.min.js"/>"
-	type="text/javascript"></script>
-
+<!-- jQuery -->
+<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <!-- Favicon
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<link rel="icon" type="image/png" href="images/favicon.png">
+<link rel="icon" type="image/png" href="/images/favicon.png">
 
 </head>
 <body>
@@ -46,23 +42,33 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<div class="container">
 		<section class="header">
-			<h1>Current Runing Washers</h1>
+			<!-- Set action url to modification if Book attribute exists in the 'model'. -->
+			<h1>Node Registration/Modification</h1>
 			<%@ include file="/WEB-INF/views/header.jsp"%>
 		</section>
-		<div class="docs-section">
-			<!-- Inflate search results here -->
-			<div class="row" style="text-align: center;">
-				<c:forEach items="${washers}" var="entry" varStatus="status">
-					<div class="four columns" <c:if test="${status.index %3 == 0}">style="margin-left:0"</c:if> >
-						<a href="<c:url value="/Washer/Detail/${entry.key}"/>"> <img
-								class="u-max-full-width"
-								src="<c:url value="/images/washer.png"/>"></a>
-						<h5>
-							<b>${entry.key}</b><br>${entry.value} people waiting
-						</h5>
-					</div>
-				</c:forEach>
-			</div>
+
+		<div class="docs-section u-full-width" style="text-align: center;">
+			<form method="post" action="<c:url value="/Node/Register"/>">
+				<div>
+					<label class="field-label">Serial Number</label>
+					<input id="serial" class="u-full-width" name="serial" type="text"
+						required="required" placeholder="Serial number here">
+				</div>
+				<div>
+					<label class="field-label">Node Name</label>
+					<input id="node-name" class="u-full-width" name="isbn" type="text"
+						placeholder="Node name here">
+				</div>
+				<div>
+					<label class="field-label">Product Name</label>
+					<input id="product-name" class="u-full-width" name="product-name" type="text"
+						required="required" placeholder="Product name here">
+				</div>
+
+				<input class="button" type="submit" value="Register">
+				<a class="button" href="<c:url value="/Node/List"/>">Back to List</a>
+				
+			</form>
 			
 		</div>
 

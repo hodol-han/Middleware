@@ -47,22 +47,23 @@
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 	<div class="container">
 		<section class="row header">
-			<h1>Your Reservations</h1>
+			<h1>Your Nodes</h1>
 			<%@ include file="/WEB-INF/views/header.jsp"%>
 		</section>
 
 		<!-- Inflate reservations here -->
-		<div class="docs-section">
+		<div>
 			<table class="u-full-width">
 				<thead>
 					<tr>
-						<th>Washer Name</th>
-						<th>Duration</th>
-						<th>Link</th>
+						<th>Id</th>
+						<th>Serial Number</th>
+						<th>Product Name</th>
 					</tr>
 				</thead>
 
-				<tbody id="books">
+				<tbody>
+<!--				
 					<c:forEach items="${reservations}" var="entry" varStatus="status">
 						<c:forEach items="${entry.value}" var="resv">
 							<tr>
@@ -73,8 +74,12 @@
 							</tr>
 						</c:forEach>
 					</c:forEach>
+-->
 				</tbody>
 			</table>
+			
+			<a class="button" href="<c:url value="/Node/Register"/>">+ Register New Node</a>
+			
 		</div>
 
 

@@ -26,12 +26,11 @@
 	
 	<interceptors>
 		<interceptor>
-			<mapping path="/User/Modify" />
-			<mapping path="/Washer/**" />
-			<mapping path="/Reservation" />
+			<mapping path="/User/**" />
+			<mapping path="/Node/**" />
 			
-			<exclude-mapping path="/Washer/Register/*"/>
-			<exclude-mapping path="/Washer/Unregister/*"/>
+			<exclude-mapping path="/User/Login/**"/>
+			<exclude-mapping path="/User/Register/**"/>
 				
 			<beans:bean class="kr.ac.ajou.lazybones.interceptors.AccessManagementUnit" />
 		</interceptor>

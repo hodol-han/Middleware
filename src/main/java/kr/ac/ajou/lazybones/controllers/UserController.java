@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import kr.ac.ajou.lazybones.entitymanager.UserManagementUnit;
-import kr.ac.ajou.lazybones.repos.entities.User;
+import kr.ac.ajou.lazybones.repos.entities.UserEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -87,7 +87,7 @@ public class UserController {
 				@RequestParam(value = "password") String pwd, HttpServletRequest request) {
 			try {
 				// Get and delete user.
-				User user = new User(id, name, pwd);
+				UserEntity user = new UserEntity(id, name, pwd);
 				userEntityManagerImpl.delete(user);
 				
 				// Invalidate session
@@ -122,7 +122,7 @@ public class UserController {
 	@RequestMapping(value = "/User/Login", method = RequestMethod.POST)
 	public String processLogin(@RequestParam(value = "id") String id, @RequestParam(value = "password") String pwd, HttpServletRequest request) {
 		try {
-			User user = userEntityManagerImpl.findById(id);
+			UserEntity user = userEntityManagerImpl.findById(id);
 			
 			// If user does not exist
 			if(user == null) {
@@ -181,7 +181,7 @@ public class UserController {
 	 */
 		@RequestMapping(value = "/User/Modify", method = RequestMethod.GET)
 		public String showModifyForm(HttpServletRequest request, Model model) throws IOException {
-			User user = userEntityManagerImpl.findById(request.getSession().getAttribute("userid").toString());
+			UserEntity user = userEntityManagerImpl.findById(request.getSession().getAttribute("userid").toString());
 			model.addAttribute(user);
 			return "modify";
 		}
@@ -194,7 +194,7 @@ public class UserController {
 			@RequestParam(value = "password") String pwd, HttpServletRequest request) {
 		try {
 			// Find by user id of session
-			User user = userEntityManagerImpl.findById(request.getSession().getAttribute("userid").toString());
+			UserEntity user = userEntityManagerImpl.findById(request.getSession().getAttribute("userid").toString());
 			System.out.println(user.getId() + user.getName() + user.getPwd());
 			
 			// Change name and password

@@ -1,6 +1,8 @@
-package kr.ac.ajou.lazybones.repos.entities;
+package kr.ac.ajou.lazybones.templates;
 
-public class RegisterForm {
+import kr.ac.ajou.lazybones.repos.entities.UserEntity;
+
+public class RegistrationForm {
 	
 	private String id;
 	private String name;
@@ -27,7 +29,7 @@ public class RegisterForm {
 		this.pwd = pwd;
 	}
 
-	public User toUser() {
-		return new User(id, name, pwd);
+	public UserEntity toUser() {
+		return new UserEntity(id, name, pwd);
 	}
 }

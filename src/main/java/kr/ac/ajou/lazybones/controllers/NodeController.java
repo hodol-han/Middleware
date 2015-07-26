@@ -25,34 +25,28 @@ import org.springframework.web.bind.annotation.RestController;
 public class NodeController {
 
 	
-//	@Autowired
+	@Autowired
 	NodeManager nodeManager;
 
-	
-	@RequestMapping(value="/Node/Discover", method = RequestMethod.GET)
-	@ResponseBody
-	public String discoverNodes(){
-				
-		
-		return "";
+	@RequestMapping(value = "/Node", method = RequestMethod.GET)
+	public String node(){
+		return "redirect:/Node/List";
 	}
 	
+	@RequestMapping(value = "/Node/List", method = RequestMethod.GET)
+	public String getNodes(){
+
+		
+		return "nodeList";
+	}
 	
-	@RequestMapping(value="/Node/Actuate", method = RequestMethod.GET)
-	@ResponseBody
-	public String actuateNode(){
-
+	@RequestMapping(value = "/Node/Register", method = RequestMethod.GET)
+	public String registerNode(){
 		
-		return "";
+		return "nodeForm";
 	}
 
-	@RequestMapping(value="/Node/Sense", method = RequestMethod.GET)
-	@ResponseBody
-	public String senseNode(){
-
-		
-		return "";
-	}
-
+	
+	
 
 }
