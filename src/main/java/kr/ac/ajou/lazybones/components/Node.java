@@ -2,14 +2,16 @@ package kr.ac.ajou.lazybones.components;
 
 public class Node {
 	
-	private Connection connection;
 	
-	public Node(Connection connection){
+	private Requester connection;
+	
+	
+	public Node(Requester connection){
 		this.connection = connection;
 	}
 	
-	public String command(String command){
-		return "";
+	public String query(String query){
+		return connection.query(query);
 	}	
 
 }

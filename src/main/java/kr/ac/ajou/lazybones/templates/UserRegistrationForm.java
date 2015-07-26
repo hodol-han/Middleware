@@ -2,7 +2,7 @@ package kr.ac.ajou.lazybones.templates;
 
 import kr.ac.ajou.lazybones.repos.entities.UserEntity;
 
-public class RegistrationForm {
+public class UserRegistrationForm {
 	
 	private String id;
 	private String name;

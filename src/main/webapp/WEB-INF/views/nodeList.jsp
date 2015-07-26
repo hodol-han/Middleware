@@ -56,25 +56,26 @@
 			<table class="u-full-width">
 				<thead>
 					<tr>
-						<th>Id</th>
+						<th>Node Id</th>
+						<th>Node Name</th>
 						<th>Serial Number</th>
 						<th>Product Name</th>
+						<th>Links</th>
 					</tr>
 				</thead>
 
 				<tbody>
-<!--				
-					<c:forEach items="${reservations}" var="entry" varStatus="status">
+					<c:forEach items="${nodes}" var="entry" varStatus="status">
 						<c:forEach items="${entry.value}" var="resv">
 							<tr>
-								<td><c:out value="${entry.key}"></c:out></td>
-								<td><fmt:formatDate value="${resv.from}" pattern="yy-MM-dd HH:mm"/> ~ 
-								<fmt:formatDate value="${resv.to}" pattern="yy-MM-dd HH:mm"/></td>
-								<td><a href="<c:url value="/Washer/Detail/${entry.key}"/>">Detail</a></td>
+								<td><c:out value="${entry.id}"></c:out></td>
+								<td><c:out value="${entry.name}"></c:out></td>
+								<td><c:out value="${entry.serial}"></c:out></td>
+								<td><c:out value="${entry.productName}"></c:out></td>
+								<td><a href="<c:url value="/Node/${entry.id}/Detail/"/>">Detail</a></td>
 							</tr>
 						</c:forEach>
 					</c:forEach>
--->
 				</tbody>
 			</table>
 			

@@ -1,4 +1,4 @@
-package kr.ac.ajou.lazybones.entitymanager;
+package kr.ac.ajou.lazybones.managers;
 
 import kr.ac.ajou.lazybones.repos.UserRepository;
 import kr.ac.ajou.lazybones.repos.entities.UserEntity;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 @Repository
-public class UserManagementUnit {
+public class UserManager {
 
 	@Autowired
 	private UserRepository repo;

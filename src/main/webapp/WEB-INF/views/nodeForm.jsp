@@ -55,16 +55,16 @@
 						required="required" placeholder="Serial number here">
 				</div>
 				<div>
-					<label class="field-label">Node Name</label>
-					<input id="node-name" class="u-full-width" name="isbn" type="text"
-						placeholder="Node name here">
-				</div>
-				<div>
 					<label class="field-label">Product Name</label>
 					<input id="product-name" class="u-full-width" name="product-name" type="text"
 						required="required" placeholder="Product name here">
 				</div>
-
+				<div>
+					<label class="field-label">Node Name</label>
+					<input id="node-name" class="u-full-width" name="node-name" type="text"
+						placeholder="Node name here">
+				</div>
+				
 				<input class="button" type="submit" value="Register">
 				<a class="button" href="<c:url value="/Node/List"/>">Back to List</a>
 				

@@ -24,7 +24,7 @@ public class MessageBroker {
 		
 		Node node = this.nodes.get(to);
 		if(node != null)
-			result = node.command(command);
+			result = node.query(command);
 		else
 			result = "failed";
 	}

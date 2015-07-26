@@ -5,10 +5,12 @@ create table User (
 );
 
 create table Node (
-	id varchar(20) unique not null,
+	id int not null primary key auto_increment,
+	owner varchar(20) not null,
+	name varchar(50),
 	serial varchar(50) unique not null,
-	product_name varchar(50) unique not null
-	
+	product_name varchar(50) not null,
+	foreign key(owner) references User(id)
 );
 
 
