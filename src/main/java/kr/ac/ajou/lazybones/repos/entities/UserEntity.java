@@ -27,7 +27,7 @@ public class UserEntity {
 	//@GeneratedValue(strategy = GenerationType.AUTO)
 	//private Long identifier;
 
-	// @NotNull
+	// @NotNull																													
 	// @Size(min = 1, max = 16)
 	@Id
 	@Column

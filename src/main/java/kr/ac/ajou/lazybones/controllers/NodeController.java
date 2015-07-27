@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,14 +55,14 @@ public class NodeController {
 
 		nodeManager.registerNode(userId, serial, productName, name);
 
-		return "nodeList";
+		return "redirect:/Node/List";
 	}
-	
+
 	@RequestMapping(value = "/Node/{id}/", method = RequestMethod.GET)
-	public @ResponseBody String query(@PathVariable("ID") Long nodeId, String operation){
-		//Echo to test
-		
-		return operation;
+	public @ResponseBody String query(@PathVariable("ID") Long nodeId, @RequestBody String query) {
+		// Echo to test
+
+		return nodeManager.queryToNode(nodeId, query);
 	}
 
 }

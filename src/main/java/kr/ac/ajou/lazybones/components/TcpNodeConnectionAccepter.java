@@ -21,7 +21,7 @@ public class TcpNodeConnectionAccepter {
 	private TcpListener listener;
 
 	@Autowired
-	NodeManager nodeManager;	
+	NodeManager nodeManager;
 
 	private class TcpListener extends Thread {
 
@@ -58,7 +58,6 @@ public class TcpNodeConnectionAccepter {
 					Receiver receiver = new TcpReceiver(clientReceiveSocket);
 
 					nodeManager.addLiveNode(nodeInfo.getSn(), requester, receiver);
-					
 
 				} catch (IOException e) {
 					// TODO Auto-generated catch block

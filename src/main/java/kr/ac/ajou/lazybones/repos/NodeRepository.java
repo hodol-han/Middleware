@@ -10,7 +10,7 @@ import kr.ac.ajou.lazybones.repos.entities.UserEntity;
 public interface NodeRepository extends JpaRepository<NodeEntity, Long> {
 	public <U extends NodeEntity> U save(NodeEntity node);
 
-	public List<NodeEntity> findNodesByOwner(UserEntity owner);
+	public List<NodeEntity> findNodeEntitiesByOwner(UserEntity owner);
 
 	public NodeEntity findById(Long id);
 

@@ -66,15 +66,13 @@
 
 				<tbody>
 					<c:forEach items="${nodes}" var="entry" varStatus="status">
-						<c:forEach items="${entry.value}" var="resv">
-							<tr>
-								<td><c:out value="${entry.id}"></c:out></td>
-								<td><c:out value="${entry.name}"></c:out></td>
-								<td><c:out value="${entry.serial}"></c:out></td>
-								<td><c:out value="${entry.productName}"></c:out></td>
-								<td><a href="<c:url value="/Node/${entry.id}/Detail/"/>">Detail</a></td>
-							</tr>
-						</c:forEach>
+						<tr>
+							<td><c:out value="${entry.id}"></c:out></td>
+							<td><c:out value="${entry.name}"></c:out></td>
+							<td><c:out value="${entry.serial}"></c:out></td>
+							<td><c:out value="${entry.productName}"></c:out></td>
+							<td><a href="<c:url value="/Node/${entry.id}/Detail/"/>">Detail</a></td>
+						</tr>
 					</c:forEach>
 				</tbody>
 			</table>

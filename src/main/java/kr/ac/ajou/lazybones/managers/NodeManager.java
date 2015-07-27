@@ -52,17 +52,24 @@ public class NodeManager {
 	@Transactional
 	public boolean removeLiveNode(Long nid){
 		// Find SN and make a node then add it into liveNodes
-		this.requesters.remove(nid);
+		this.requesters.remove(nid).disconnect();
 		this.rp.detachReceiver(nid);
 		
-		return true;
-		
+		return true;	
+	}
+	
+	
+	public String queryToNode(Long nid, String query){
+		Requester requester = this.requesters.get(nid);
+		if(requester != null)
+			return requester.query(query);
+		else
+			return "";
 	}
 
 	@Transactional
 	public void registerNode(String ownerId, String serialNumber, String productName, String nodeName) {
 		if (repo.findBySerial(serialNumber) == null) {
-			// TODO
 			UserEntity owner = em.getReference(UserEntity.class, ownerId);
 			NodeEntity entity = new NodeEntity(owner, serialNumber, productName, nodeName);
 
@@ -77,8 +84,7 @@ public class NodeManager {
 			repo.delete(node);
 			
 			//Erase current requester and receiver of the node if exists
-			this.requesters.remove(nid);
-			this.rp.detachReceiver(nid);
+			this.removeLiveNode(nid);			
 		}
 	}
 
@@ -86,10 +92,10 @@ public class NodeManager {
 	public List<NodeEntity> findNodesByOwner(String ownerId) {
 		UserEntity owner = em.getReference(UserEntity.class, ownerId);
 
-		return repo.findNodesByOwner(owner);
+		return repo.findNodeEntitiesByOwner(owner);
 	}
 
-	public NodeEntity findById(String id) {
+	public NodeEntity findById(Long id) {
 		return null;
 	}
 

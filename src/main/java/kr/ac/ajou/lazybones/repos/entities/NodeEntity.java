@@ -70,6 +70,10 @@ public class NodeEntity {
 	public void setOwner(UserEntity owner) {
 		this.owner = owner;
 	}
+	
+	public NodeEntity(){
+		
+	}
 
 	public NodeEntity(UserEntity owner, String serial, String productName, String name) {
 		super();
