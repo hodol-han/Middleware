@@ -32,7 +32,7 @@ public class UserEntity {
 	@Id
 	@Column
 	private String id;
-
+	
 	// @NotNull
 	// @Size(min = 2, max = 60)
 	@Column
@@ -42,7 +42,10 @@ public class UserEntity {
 	// @Size(min = 5, max = 25)
 
 	private String pwd;
-
+	
+	@Column
+	private String keyhash;
+	
 	public UserEntity() {
 	}
 
@@ -75,6 +78,15 @@ public class UserEntity {
 	public void setPwd(String pwd) {
 		this.pwd = pwd;
 	}
+	
+	public String getKeyhash(){
+		return this.keyhash;
+	}
+	
+	public void setKeyhash(String keyhash){
+		this.keyhash = keyhash;
+	}
+	
 
 	@Override
 	public boolean equals(Object that) {

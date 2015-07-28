@@ -1,4 +1,4 @@
-package kr.ac.ajou.lazybones.components;
+package kr.ac.ajou.lazybones.connection.tcp;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -7,25 +7,32 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.Socket;
 
+import kr.ac.ajou.lazybones.connection.Receiver;
+
 public class TcpReceiver implements Receiver {
-	
+
+	private String serialNumber;
 	private Socket socket;
 	private BufferedReader reader;
-	private BufferedWriter writer;
-	
-	public TcpReceiver(Socket socket) throws IOException{
+
+	public TcpReceiver(String serialNumber, Socket socket) throws IOException {
+		this.serialNumber = serialNumber;
 		this.socket = socket;
 		this.reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		this.writer = new BufferedWriter(new OutputStreamWriter(socket.getOutputStream()));
 	}
-	
+
 	@Override
 	public String receive() {
 		try {
 			return this.reader.readLine();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			try {
+				reader.close();
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
 		return null;
 	}
@@ -33,16 +40,15 @@ public class TcpReceiver implements Receiver {
 	@Override
 	public boolean connect() {
 		// TODO Auto-generated method stub
-		
+
 		return false;
 	}
-
 
 	@Override
 	public boolean disconnect() {
 		// TODO Auto-generated method stub
 		try {
-			if(!socket.isClosed())
+			if (!socket.isClosed())
 				socket.close();
 			return true;
 		} catch (IOException e) {
@@ -52,5 +58,15 @@ public class TcpReceiver implements Receiver {
 		return false;
 	}
 
+	@Override
+	public boolean isConnected() {
+		return socket.isConnected();
+	}
+
+	@Override
+	public String getSn() {
+		// TODO Auto-generated method stub
+		return this.serialNumber;
+	}
 
 }

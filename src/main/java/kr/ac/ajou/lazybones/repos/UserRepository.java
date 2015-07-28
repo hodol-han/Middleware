@@ -8,6 +8,8 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
 	<U extends UserEntity> U save(UserEntity user);
 
 	UserEntity findById(String id);
+	
+	UserEntity findByKeyhash(String keyhash);
 
 	void delete(UserEntity u);
 }

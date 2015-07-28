@@ -22,7 +22,7 @@
 	</beans:bean>
 
 	<context:component-scan base-package="kr.ac.ajou.lazybones" />
-	<context:component-scan base-package="kr.ac.ajou.lazybones.components" />
+	<context:component-scan base-package="kr.ac.ajou.lazybones.connection" />
 	
 	<interceptors>
 		<interceptor>
@@ -30,9 +30,11 @@
 			<mapping path="/Node/**" />
 			
 			<exclude-mapping path="/User/Login/**"/>
+			<exclude-mapping path="/User/Credential"/>
 			<exclude-mapping path="/User/Register/**"/>
+			<exclude-mapping path="/Node/*/Query"/>
 				
-			<beans:bean class="kr.ac.ajou.lazybones.interceptors.AccessManagementUnit" />
+			<beans:bean class="kr.ac.ajou.lazybones.interceptors.AccessManagemer" />
 		</interceptor>
 	</interceptors>
 

@@ -22,12 +22,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 public class UserController {
 
-	private UserManager userEntityManagerImpl;
+	private UserManager userEntityManager;
 
 	@Autowired
 	public UserController(UserManager userEntityManagerImpl) {
 		super();
-		this.userEntityManagerImpl = userEntityManagerImpl;
+		this.userEntityManager = userEntityManagerImpl;
 	}
 
 	/*
@@ -46,7 +46,7 @@ public class UserController {
 			@RequestParam(value = "password") String pwd) {
 		try {
 			// If ID exists already
-			if (userEntityManagerImpl.findById(id) != null) {
+			if (userEntityManager.findById(id) != null) {
 				System.err.println("Fail to register: same ID already exists");
 				return "redirect:/User/Register";
 			}
@@ -55,7 +55,7 @@ public class UserController {
 			System.out.println(id + name + pwd);
 
 			// If no ID --> save it.
-			userEntityManagerImpl.insert(id, name, pwd);
+			userEntityManager.insert(id, name, pwd);
 
 			// For testing
 			System.out.println("Sucess to register: " + id + ", " + name + ", " + pwd);
@@ -86,7 +86,7 @@ public class UserController {
 		try {
 			// Get and delete user.
 			UserEntity user = new UserEntity(id, name, pwd);
-			userEntityManagerImpl.delete(user);
+			userEntityManager.delete(user);
 
 			// Invalidate session
 			request.getSession().invalidate();
@@ -119,46 +119,27 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/User/Login", method = RequestMethod.POST)
 	public String processLogin(@RequestParam(value = "id") String id, @RequestParam(value = "password") String pwd,
-			HttpServletRequest request) {
+			HttpServletRequest request, Model model) {
 		try {
-			UserEntity user = userEntityManagerImpl.findById(id);
+			if (userEntityManager.isValidLogin(id, pwd)) {
+				UserEntity user = userEntityManager.findById(id);
 
-			// If user does not exist
-			if (user == null) {
-				// For testing
-				System.out.println("Login failed: " + id + ", " + pwd + "- User doesn't exists");
-
-				return "redirect:/User/Login";
-			}
-
-			// if pwd is correct
-			if (pwd.equals(user.getPwd())) {
-				System.out.println("pwd correct");
-
-				// record session
+				request.getSession().setAttribute("credential", user.getKeyhash());
 				request.getSession().setAttribute("logininfo", true);
 				request.getSession().setAttribute("userid", user.getId());
 
-				return "redirect:/";
+				return "redirect:/Node/";
+
+			} else {
+				System.out.println("Login failed. ");
+				model.addAttribute("result", "Login failed! Try Again.");
+				return "login";
 			}
 
-			// if pwd is not correct
-			System.out.println("pwd not correct");
 		} catch (Exception e) {
 			e.printStackTrace();
-			return "redirect:/User/Login";
 		}
-
-		return "redirect:/User/Login";
-	}
-
-	/*
-	 * Login check
-	 */
-	@RequestMapping(value = "/User/Logincheck")
-	public void loginCheck(HttpServletRequest request) {
-		// making session
-		request.getSession().setAttribute("logininfo", true);
+		return "login";
 	}
 
 	/*
@@ -180,8 +161,11 @@ public class UserController {
 	 */
 	@RequestMapping(value = "/User/Modify", method = RequestMethod.GET)
 	public String showModifyForm(HttpServletRequest request, Model model) throws IOException {
-		UserEntity user = userEntityManagerImpl.findById(request.getSession().getAttribute("userid").toString());
-		model.addAttribute(user);
+		String keyhash = (String) request.getSession().getAttribute("credential");
+		UserEntity user = userEntityManager.findUserByKeyhash(keyhash);
+
+		model.addAttribute("user", user);
+
 		return "modify";
 	}
 
@@ -193,15 +177,17 @@ public class UserController {
 			HttpServletRequest request) {
 		try {
 			// Find by user id of session
-			UserEntity user = userEntityManagerImpl.findById(request.getSession().getAttribute("userid").toString());
-			System.out.println(user.getId() + user.getName() + user.getPwd());
+			UserEntity user = userEntityManager
+					.findUserByKeyhash(request.getSession().getAttribute("credential").toString());
+					// System.out.println(user.getId() + user.getName() +
+					// user.getPwd());
 
 			// Change name and password
 			user.setName(name);
 			user.setPwd(pwd);
 
 			// Update user
-			userEntityManagerImpl.update(user);
+			userEntityManager.update(user);
 
 			// If registration succeed, go to login page.
 			return "redirect:/User/Modify";

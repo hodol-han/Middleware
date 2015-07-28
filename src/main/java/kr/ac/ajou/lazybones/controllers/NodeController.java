@@ -1,5 +1,7 @@
 package kr.ac.ajou.lazybones.controllers;
 
+import java.io.IOException;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import kr.ac.ajou.lazybones.managers.NodeManager;
+import kr.ac.ajou.lazybones.managers.RequesterManager;
 import kr.ac.ajou.lazybones.managers.UserManager;
+import kr.ac.ajou.lazybones.repos.entities.UserEntity;
+import kr.ac.ajou.lazybones.templates.QueryForm;
+import kr.ac.ajou.lazybones.templates.Result;
 
 @Controller
 public class NodeController {
@@ -23,6 +31,9 @@ public class NodeController {
 
 	@Autowired
 	UserManager userManager;
+	
+	@Autowired
+	RequesterManager requesterManager;
 
 	@RequestMapping(value = "/Node", method = RequestMethod.GET)
 	public String node() {
@@ -32,9 +43,9 @@ public class NodeController {
 	@RequestMapping(value = "/Node/List", method = RequestMethod.GET)
 	public String getNodes(HttpServletRequest request, Model model) {
 
-		String userId = (String) request.getSession().getAttribute("userid");
-
-		model.addAttribute("nodes", nodeManager.findNodesByOwner(userId));
+		UserEntity user = this.findUser(request);
+		
+		model.addAttribute("nodes", nodeManager.findNodesByOwner(user));
 
 		return "nodeList";
 	}
@@ -51,18 +62,19 @@ public class NodeController {
 			HttpServletRequest request) {
 
 		// TODO: Get user id using issued token.
-		String userId = (String) request.getSession().getAttribute("userid");
+		UserEntity user = this.findUser(request);
 
-		nodeManager.registerNode(userId, serial, productName, name);
+		nodeManager.registerNode(user, serial, productName, name);
 
 		return "redirect:/Node/List";
 	}
 
-	@RequestMapping(value = "/Node/{id}/", method = RequestMethod.GET)
-	public @ResponseBody String query(@PathVariable("ID") Long nodeId, @RequestBody String query) {
-		// Echo to test
+	
+	private UserEntity findUser(HttpServletRequest request){
+		String credential = (String) request.getSession().getAttribute("credential");
+		UserEntity user = userManager.findUserByKeyhash(credential);
 
-		return nodeManager.queryToNode(nodeId, query);
+		return user;
 	}
 
 }
