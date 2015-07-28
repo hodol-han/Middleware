@@ -64,5 +64,7 @@ public class NodeRESTController {
 				
 		return requesterManager.queryToNode(user, node, command);
 	}
+	
+	
 
 }
