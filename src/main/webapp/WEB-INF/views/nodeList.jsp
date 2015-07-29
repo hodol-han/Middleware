@@ -71,7 +71,7 @@
 							<td><c:out value="${entry.name}"></c:out></td>
 							<td><c:out value="${entry.serial}"></c:out></td>
 							<td><c:out value="${entry.productName}"></c:out></td>
-							<td><a href="<c:url value="/Node/${entry.id}/Detail/"/>">Detail</a></td>
+							<td><a href="<c:url value="/Node/${entry.id}/Unregister"/>">Unregister</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

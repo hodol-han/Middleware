@@ -142,10 +142,18 @@ public class TcpConnectionEstablisher {
 								System.out.println("Requester connection established: " + node.getSerial());
 								requesterManager.attachRequester(node.getId(), requester);
 								writer.write("{\"conn\":\"accepted\"}");
+								writer.flush();
 
 							} else {
 								writer.write("{\"conn\":\"refused\"}");
 								writer.flush();
+								
+								try {
+									Thread.sleep(3000);;
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								writer.close();
 
 								System.out.println("Connection refused: Not registered node.");
@@ -198,9 +206,17 @@ public class TcpConnectionEstablisher {
 								System.out.println("Receiver connection established: " + node.getSerial());
 								receiverManager.attachReceiver(node.getId(), receiver);
 								writer.write("{\"conn\":\"accepted\"}");
+								writer.flush();
 							} else {
 								writer.write("{\"conn\":\"refused\"}");
 								writer.flush();
+
+								try {
+									Thread.sleep(3000);;
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 								writer.close();
 
 								System.out.println("Connection refused: Not registered node.");

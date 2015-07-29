@@ -32,11 +32,7 @@ public class TcpRequester implements Requester {
 			this.writer.write(string);
 			this.writer.flush();
 
-			StringBuilder builder = new StringBuilder();
-			CharBuffer buf = CharBuffer.allocate(2000);
-			int count = this.reader.read(buf);
-
-			String result = buf.toString();
+			String result = this.reader.readLine();
 			
 			System.out.println("Result: " + result);
 			return result;

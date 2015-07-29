@@ -53,19 +53,27 @@ public class NodeManager {
 	}
 
 	public NodeEntity findById(Long id) {
-		return null;
+		return repo.findById(id);
 	}
 
 	public NodeEntity findBySerial(String serial) {
 		return repo.findBySerial(serial);
 	}
 
-	public int update(NodeEntity u) {
-		return 0;
+	public boolean update(NodeEntity u) {
+		if(repo.findById(u.getId())!=null){
+			repo.save(u);
+		return true;
+		}
+		return false;
 	}
 
-	public int delete(NodeEntity u) {
-		return 0;
+	public boolean delete(NodeEntity u) {
+		if(repo.findById(u.getId())!=null){
+			repo.delete(u);
+		return true;
+		}
+		return false;
 	}
 
 }

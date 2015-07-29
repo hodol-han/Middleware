@@ -48,7 +48,7 @@
 		</section>
 		
 		<div class="docs-section u-full-width" style="text-align: center;">
-			<p>{result}</p>
+			<p>${result}</p>
 			<form method="post" action="<c:url value="/Node/Register"/>">
 				<div>
 					<label class="field-label">Serial Number</label>
