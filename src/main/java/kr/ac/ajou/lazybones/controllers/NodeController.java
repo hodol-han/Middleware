@@ -74,7 +74,7 @@ public class NodeController {
 		return "redirect:/Node/List";
 	}
 
-	@RequestMapping(value = "/Node/{id}/Unregister", method = RequestMethod.POST)
+	@RequestMapping(value = "/Node/{id}/Unregister", method = RequestMethod.GET)
 	public String unregisterNode(@PathVariable("id") Long nid, HttpServletRequest request) {
 
 		// TODO: Get user id using issued token.
