@@ -19,9 +19,9 @@ import kr.ac.ajou.lazybones.managers.LogManager;
 import kr.ac.ajou.lazybones.managers.NodeManager;
 import kr.ac.ajou.lazybones.managers.UserManager;
 import kr.ac.ajou.lazybones.repos.entities.NodeEntity;
-import kr.ac.ajou.lazybones.repos.entities.NodeSensorLogEntity;
-import kr.ac.ajou.lazybones.repos.entities.UserCommandLogEntity;
+import kr.ac.ajou.lazybones.repos.entities.NodeHistoryEntity;
 import kr.ac.ajou.lazybones.repos.entities.UserEntity;
+import kr.ac.ajou.lazybones.repos.entities.UserHistoryEntity;
 import kr.ac.ajou.lazybones.templates.AuthorizationForm;
 import kr.ac.ajou.lazybones.templates.NodeSensorLogForm;
 import kr.ac.ajou.lazybones.templates.Result;
@@ -56,15 +56,15 @@ public class LogRESTController {
 		String credential = form.getCredential();
 		UserEntity user = getUserByCredential(credential);
 
-		List<UserCommandLogEntity> logs = logManager.getUserCommandLogsByUser(user);
-		List<UserCommandLogForm> logsToTransfer = new ArrayList<>();
-
-		for (UserCommandLogEntity log : logs) {
-			logsToTransfer.add(log.transform());
-		}
+		List<UserHistoryEntity> logs = logManager.getUserCommandLogsByUser(user);
+//		List<UserCommandLogForm> logsToTransfer = new ArrayList<>();
+//
+//		for (UserHistoryEntity log : logs) {
+//			logsToTransfer.add(log.transform());
+//		}
 
 		try {
-			result.setData(mapper.writeValueAsString(logsToTransfer));
+			result.setData(mapper.writeValueAsString(logs));
 			result.setResult("Succeed");
 		} catch (JsonProcessingException e) {
 			result.setResult("Failed");
@@ -76,7 +76,7 @@ public class LogRESTController {
 	}
 
 	@RequestMapping(value = "/Log/Node/{id}/Command", method = RequestMethod.POST)
-	public @ResponseBody Result getNodeCommandLog(@PathVariable("id") Long nodeId, @RequestBody String auth) {
+	public @ResponseBody Result getNodeCommandLog(@PathVariable("id") Integer nodeId, @RequestBody String auth) {
 
 		AuthorizationForm form;
 
@@ -91,18 +91,18 @@ public class LogRESTController {
 		}
 		String credential = form.getCredential();
 		UserEntity user = getUserByCredential(credential);
-		NodeEntity node = nodeManager.findById(nodeId);
+		NodeEntity node = nodeManager.findNodeById(nodeId);
 
-		List<UserCommandLogEntity> logs = logManager.getUserCommandLogsByNode(user, node);
+		List<UserHistoryEntity> logs = logManager.getUserCommandLogsByNode(user, node);
 
-		List<UserCommandLogForm> logsToTransfer = new ArrayList<>();
-
-		for (UserCommandLogEntity log : logs) {
-			logsToTransfer.add(log.transform());
-		}
+//		List<UserCommandLogForm> logsToTransfer = new ArrayList<>();
+//
+//		for (UserCommandLogEntity log : logs) {
+//			logsToTransfer.add(log.transform());
+//		}
 
 		try {
-			result.setData(mapper.writeValueAsString(logsToTransfer));
+			result.setData(mapper.writeValueAsString(logs));
 			result.setResult("Succeed");
 		} catch (JsonProcessingException e) {
 			result.setResult("Failed");
@@ -114,7 +114,7 @@ public class LogRESTController {
 	}
 
 	@RequestMapping(value = "/Log/Node/{id}/Sensor", method = RequestMethod.POST)
-	public @ResponseBody Result getNodeSensorLog(@PathVariable("id") Long nodeId, @RequestBody String auth) {
+	public @ResponseBody Result getNodeSensorLog(@PathVariable("id") Integer nodeId, @RequestBody String auth) {
 		
 		AuthorizationForm form;
 
@@ -129,18 +129,18 @@ public class LogRESTController {
 		}
 		String credential = form.getCredential();
 		UserEntity user = getUserByCredential(credential);
-		NodeEntity node = nodeManager.findById(nodeId);
+		NodeEntity node = nodeManager.findNodeById(nodeId);
 
-		List<NodeSensorLogEntity> logs = logManager.getNodeDataLog(user, node);
+		List<NodeHistoryEntity> logs = logManager.getNodeDataLog(user, node);
 		
-		List<NodeSensorLogForm> logsToTransfer = new ArrayList<>();
-
-		for (NodeSensorLogEntity log : logs) {
-			logsToTransfer.add(log.transform());
-		}
+//		List<NodeSensorLogForm> logsToTransfer = new ArrayList<>();
+//
+//		for (NodeSensorLogEntity log : logs) {
+//			logsToTransfer.add(log.transform());
+//		}
 
 		try {
-			result.setData(mapper.writeValueAsString(logsToTransfer));
+			result.setData(mapper.writeValueAsString(logs));
 			result.setResult("Succeed");
 		} catch (JsonProcessingException e) {
 			result.setResult("Failed");

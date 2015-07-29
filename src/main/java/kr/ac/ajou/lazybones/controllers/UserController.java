@@ -85,7 +85,12 @@ public class UserController {
 			HttpServletRequest request) {
 		try {
 			// Get and delete user.
-			UserEntity user = new UserEntity(id, name, pwd);
+			UserEntity user = new UserEntity();
+			
+			user.setUserID(id);
+			user.setName(name);
+			user.setPwd(pwd);
+			
 			userEntityManager.delete(user);
 
 			// Invalidate session
@@ -124,9 +129,9 @@ public class UserController {
 			if (userEntityManager.isValidLogin(id, pwd)) {
 				UserEntity user = userEntityManager.findById(id);
 
-				request.getSession().setAttribute("credential", user.getKeyhash());
+				request.getSession().setAttribute("credential", user.getUserKey());
 				request.getSession().setAttribute("logininfo", true);
-				request.getSession().setAttribute("userid", user.getId());
+				request.getSession().setAttribute("userid", user.getUserID());
 
 				return "redirect:/Node/";
 

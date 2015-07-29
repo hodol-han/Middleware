@@ -6,8 +6,8 @@ import javax.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import kr.ac.ajou.lazybones.repos.CredentialRepository;
-import kr.ac.ajou.lazybones.repos.entities.UserEntity;
+import kr.ac.ajou.lazybones.repos.jpa.CredentialRepository;
+import kr.ac.ajou.lazybones.repos.jpa.entities.UserEntity;
 
 //@Repository
 public class CredentialManager {

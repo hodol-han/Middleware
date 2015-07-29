@@ -6,13 +6,12 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 
 import java.util.Map.Entry;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import kr.ac.ajou.lazybones.connection.Receiver;
 import kr.ac.ajou.lazybones.connection.Requester;
 import kr.ac.ajou.lazybones.repos.entities.NodeEntity;
 import kr.ac.ajou.lazybones.repos.entities.UserEntity;
@@ -21,13 +20,13 @@ import kr.ac.ajou.lazybones.templates.Result;
 @Component
 public class RequesterManager {
 
-	public static final long MONITOR_INTERVAL = 3000;
+	public static final Integer MONITOR_INTERVAL = 3000;
 	private Timer nodeMonitorTimer;
 
 	private class LivenessMonitorTask extends TimerTask {
 		@Override
 		public void run() {
-			for (Entry<Long, Requester> entry : requesters.entrySet()) {
+			for (Entry<Integer, Requester> entry : requesters.entrySet()) {
 				if (!entry.getValue().isConnected()) {
 					System.out.println("Requester disconnected: " + entry.getKey());
 					detachRequester(entry.getKey());
@@ -38,13 +37,13 @@ public class RequesterManager {
 		}
 	}
 
-	private Map<Long, Requester> requesters = new HashMap<>();
+	private Map<Integer, Requester> requesters = new HashMap<>();
 
-	public synchronized void attachRequester(Long nid, Requester requester) {
+	public synchronized void attachRequester(Integer nid, Requester requester) {
 		this.requesters.put(nid, requester);
 	}
 
-	public synchronized void detachRequester(Long nid) {
+	public synchronized void detachRequester(Integer nid) {
 		this.requesters.remove(nid);
 	}
 
@@ -54,13 +53,18 @@ public class RequesterManager {
 		this.nodeMonitorTimer = new Timer();
 		nodeMonitorTimer.scheduleAtFixedRate(nodeMonitor, MONITOR_INTERVAL, MONITOR_INTERVAL);
 	}
+	
+	@PreDestroy
+	public void terminate(){
+		nodeMonitorTimer.cancel();
+	}
 
 	public Result queryToNode(UserEntity user, NodeEntity node, String query) {
 
 		Result result = new Result();
 
-		if (node.getOwner().getId().equals(user.getId())) {
-			Requester requester = this.requesters.get(node.getId());
+		if (node.getOwner().equals(user.getUserID())) {
+			Requester requester = this.requesters.get(node.getNID());
 			if (requester != null) {
 				String data;
 				synchronized (requester) {

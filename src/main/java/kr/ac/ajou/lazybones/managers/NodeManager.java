@@ -12,33 +12,34 @@ import kr.ac.ajou.lazybones.repos.entities.UserEntity;
 @Repository
 public class NodeManager {
 
+	private NodeRepository repo = new NodeRepository();
 
-	@Autowired
-	private NodeRepository repo;
-	
 	@Autowired
 	ReceiverManager receiverManager;
-	
+
 	@Autowired
 	RequesterManager requesterManager;
-	
-
 
 	@Transactional
 	public void registerNode(UserEntity owner, String serialNumber, String productName, String nodeName) {
-		if (repo.findBySerial(serialNumber) == null) {
-			
-			NodeEntity entity = new NodeEntity(owner, serialNumber, productName, nodeName);
+		if (repo.findNodeBySerialNumber(serialNumber) == null) {
 
-			repo.save(entity);
+			NodeEntity entity = new NodeEntity();
+
+			entity.setOwner(owner.getUserID());
+			entity.setSerialNumber(serialNumber);
+			entity.setProductName(productName);
+			entity.setNodeName(nodeName);
+
+			repo.createNodeItems(entity);
 		}
 	}
 
 	@Transactional
-	public void unregisterNode(Long nid) {
-		NodeEntity node = repo.findById(nid);
+	public void unregisterNode(Integer nid) {
+		NodeEntity node = repo.findNodebyNodeID(nid);
 		if (node != null) {
-			repo.delete(node);
+			repo.deleteNodeItem(node);
 
 			// Erase current requester and receiver of the node if exists
 			receiverManager.detachReceiver(nid);
@@ -48,30 +49,30 @@ public class NodeManager {
 
 	@Transactional
 	public List<NodeEntity> findNodesByOwner(UserEntity owner) {
-		
-		return repo.findNodeEntitiesByOwner(owner);
+
+		return repo.findNodesByOwner(owner.getUserID());
 	}
 
-	public NodeEntity findById(Long id) {
-		return repo.findById(id);
+	public NodeEntity findNodeById(Integer id) {
+		return repo.findNodebyNodeID(id);
 	}
 
-	public NodeEntity findBySerial(String serial) {
-		return repo.findBySerial(serial);
+	public NodeEntity findNodeBySerial(String serial) {
+		return repo.findNodeBySerialNumber(serial);
 	}
 
 	public boolean update(NodeEntity u) {
-		if(repo.findById(u.getId())!=null){
-			repo.save(u);
-		return true;
+		if (repo.findNodebyNodeID(u.getNID()) != null) {
+			repo.updateNodeItem(u);
+			return true;
 		}
 		return false;
 	}
 
 	public boolean delete(NodeEntity u) {
-		if(repo.findById(u.getId())!=null){
-			repo.delete(u);
-		return true;
+		if (repo.findNodebyNodeID(u.getNID()) != null) {
+			repo.deleteNodeItem(u);
+			return true;
 		}
 		return false;
 	}

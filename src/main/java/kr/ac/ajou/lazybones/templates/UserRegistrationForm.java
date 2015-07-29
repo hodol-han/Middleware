@@ -1,6 +1,6 @@
 package kr.ac.ajou.lazybones.templates;
 
-import kr.ac.ajou.lazybones.repos.entities.UserEntity;
+import kr.ac.ajou.lazybones.repos.jpa.entities.UserEntity;
 
 public class UserRegistrationForm {
 	

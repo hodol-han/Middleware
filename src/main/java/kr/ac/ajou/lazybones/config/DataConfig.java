@@ -13,6 +13,8 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
 
+import kr.ac.ajou.lazybones.managers.DynamoDBManager;
+
 /**
  * Class for configuration for JPA repository.
  * @author AJOU
@@ -24,6 +26,8 @@ public class DataConfig {
 
 	@Bean
 	public DataSource dataSource() {
+		DynamoDBManager.init();
+		
 		return new EmbeddedDatabaseBuilder().setType(EmbeddedDatabaseType.H2)
 				.addScript("schema.sql").build();
 	}

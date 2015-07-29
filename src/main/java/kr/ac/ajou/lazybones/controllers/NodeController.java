@@ -1,7 +1,5 @@
 package kr.ac.ajou.lazybones.controllers;
 
-import java.io.IOException;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,15 +73,15 @@ public class NodeController {
 	}
 
 	@RequestMapping(value = "/Node/{id}/Unregister", method = RequestMethod.GET)
-	public String unregisterNode(@PathVariable("id") Long nid, HttpServletRequest request) {
+	public String unregisterNode(@PathVariable("id") Integer nid, HttpServletRequest request) {
 
 		// TODO: Get user id using issued token.
 		UserEntity user = this.findUser(request);
-		NodeEntity node = nodeManager.findById(nid);
+		NodeEntity node = nodeManager.findNodeById(nid);
 		if (node == null)
 			return "redirect:/Node/List";
 
-		if (node.getOwner().getId().equals(user.getId()))
+		if (node.getOwner().equals(user.getUserID()))
 			nodeManager.unregisterNode(nid);
 
 		return "redirect:/Node/List";

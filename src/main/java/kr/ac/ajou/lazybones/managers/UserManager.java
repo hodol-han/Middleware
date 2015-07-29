@@ -1,49 +1,53 @@
 package kr.ac.ajou.lazybones.managers;
 
-import kr.ac.ajou.lazybones.repos.UserRepository;
-import kr.ac.ajou.lazybones.repos.entities.UserEntity;
+//import kr.ac.ajou.lazybones.repos.jpa.UserRepository;
+//import kr.ac.ajou.lazybones.repos.jpa.entities.UserEntity;
 
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.stereotype.Service;
+
+import kr.ac.ajou.lazybones.repos.UserRepository;
+import kr.ac.ajou.lazybones.repos.entities.UserEntity;
 
 @Repository
 public class UserManager {
 
-	@Autowired
-	private UserRepository repo;
+//	@Autowired
+	private UserRepository repo = new UserRepository();
 
 	public UserEntity insert(String id, String name, String pwd) {
 
 		UserEntity user = new UserEntity();
-		user.setId(id);
+		user.setUserID(id);
 		user.setName(name);
 		user.setPwd(pwd);
-		user.setKeyhash(UUID.randomUUID().toString());
+		user.setUserKey(UUID.randomUUID().toString());
 
-		return repo.save(user);
+		repo.createUserItem(user);
+		
+		return user;
 	}
 
 	public UserEntity findById(String id) {
-		return repo.findById(id);
+		return repo.findUserByID(id);
 	}
 
-	public boolean renewKeyhash(UserEntity user) {
-
-		String keyhash = UUID.randomUUID().toString();
-
-		if (repo.findById(user.getId()) != null) {
-			user.setKeyhash(keyhash);
-			repo.save(user);
-			return true;
-		} else
-			return false;
-	}
+//	public boolean renewKeyhash(UserEntity user) {
+//
+//		String keyhash = UUID.randomUUID().toString();
+//
+//		if (repo.findById(user.getId()) != null) {
+//			user.setKeyhash(keyhash);
+//			repo.save(user);
+//			return true;
+//		} else
+//			return false;
+//	}
 
 	public boolean isValidKeyhash(String keyhash) {
-		UserEntity user = repo.findByKeyhash(keyhash);
+		UserEntity user = repo.findUserByKey(keyhash);
 		if (user != null)
 			return true;
 		else
@@ -52,7 +56,7 @@ public class UserManager {
 	}
 
 	public boolean isValidLogin(String uid, String password) {
-		UserEntity user = repo.findById(uid);
+		UserEntity user = repo.findUserByID(uid);
 		if (user != null) {
 			if (user.getPwd().equals(password))
 				return true;
@@ -61,21 +65,20 @@ public class UserManager {
 	}
 
 	public UserEntity findUserByKeyhash(String keyhash) {
-		return repo.findByKeyhash(keyhash);
-
+		return repo.findUserByKey(keyhash);
 	}
 
 	public int update(UserEntity u) {
-		if (repo.findById(u.getId()) != null) {
-			repo.save(u);
+		if (repo.findUserByID(u.getUserID()) != null) {
+			repo.updateUserItem(u);
 			return 1;
 		}
 		return 0;
 	}
 
 	public int delete(UserEntity u) {
-		if (repo.findById(u.getId()) != null) {
-			repo.delete(u);
+		if (repo.findUserByID(u.getUserID()) != null) {
+			repo.deleteUserItem(u);
 			return 1;
 		} else {
 			return 0;

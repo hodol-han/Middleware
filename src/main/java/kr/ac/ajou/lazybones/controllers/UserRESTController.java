@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import kr.ac.ajou.lazybones.managers.UserManager;
-import kr.ac.ajou.lazybones.repos.entities.UserEntity;
 import kr.ac.ajou.lazybones.templates.GetCredentialForm;
 
 @Controller
@@ -43,7 +42,7 @@ public class UserRESTController {
 
 		if (userManager.isValidLogin(id, pwd)) {
 			// TODO: HARDCODED BLOCK
-			return "{\"result\":\"succeed\",\"credential\":\"" + userManager.findById(id).getKeyhash() + "\"}";
+			return "{\"result\":\"succeed\",\"credential\":\"" + userManager.findById(id).getUserKey() + "\"}";
 		} else
 			return "{\"result\":\"failed\", \"reason\":\"failed to getting credential.\"}";
 

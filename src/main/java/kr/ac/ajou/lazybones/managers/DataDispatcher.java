@@ -16,7 +16,7 @@ public class DataDispatcher {
 	NodeManager nodeManager;
 	
 	public void dispatch(String sn, String data){
-		NodeEntity node = nodeManager.findBySerial(sn);
+		NodeEntity node = nodeManager.findNodeBySerial(sn);
 		logger.logNodeSensorData(node, data);
 	}
 	

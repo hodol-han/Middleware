@@ -20,9 +20,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kr.ac.ajou.lazybones.connection.Receiver;
 import kr.ac.ajou.lazybones.connection.Requester;
 import kr.ac.ajou.lazybones.managers.RequesterManager;
+import kr.ac.ajou.lazybones.repos.entities.NodeEntity;
 import kr.ac.ajou.lazybones.managers.NodeManager;
 import kr.ac.ajou.lazybones.managers.ReceiverManager;
-import kr.ac.ajou.lazybones.repos.entities.NodeEntity;
 import kr.ac.ajou.lazybones.templates.NodeInformation;
 
 @Component
@@ -133,14 +133,14 @@ public class TcpConnectionEstablisher {
 
 							Requester requester;
 
-							NodeEntity node = nodeManager.findBySerial(nodeInfo.getSn());
+							NodeEntity node = nodeManager.findNodeBySerial(nodeInfo.getSn());
 							BufferedWriter writer = new BufferedWriter(
 									new OutputStreamWriter(socket.getOutputStream()));
 
 							if (node != null) {
-								requester = new TcpRequester(node.getSerial(), socket);
-								System.out.println("Requester connection established: " + node.getSerial());
-								requesterManager.attachRequester(node.getId(), requester);
+								requester = new TcpRequester(node.getSerialNumber(), socket);
+								System.out.println("Requester connection established: " + node.getSerialNumber());
+								requesterManager.attachRequester(node.getNID(), requester);
 								writer.write("{\"conn\":\"accepted\"}");
 								writer.flush();
 
@@ -148,13 +148,13 @@ public class TcpConnectionEstablisher {
 								writer.write("{\"conn\":\"refused\"}");
 								writer.flush();
 								
-								try {
-									Thread.sleep(3000);;
-								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								writer.close();
+//								try {
+//									Thread.sleep(3000);;
+//								} catch (InterruptedException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//								writer.close();
 
 								System.out.println("Connection refused: Not registered node.");
 							}
@@ -196,28 +196,28 @@ public class TcpConnectionEstablisher {
 
 							Receiver receiver;
 
-							NodeEntity node = nodeManager.findBySerial(nodeInfo.getSn());
+							NodeEntity node = nodeManager.findNodeBySerial(nodeInfo.getSn());
 							BufferedWriter writer = new BufferedWriter(
 									new OutputStreamWriter(socket.getOutputStream()));
 
 							if (node != null) {
 
-								receiver = new TcpReceiver(node.getSerial(), socket);
-								System.out.println("Receiver connection established: " + node.getSerial());
-								receiverManager.attachReceiver(node.getId(), receiver);
+								receiver = new TcpReceiver(node.getSerialNumber(), socket);
+								System.out.println("Receiver connection established: " + node.getSerialNumber());
+								receiverManager.attachReceiver(node.getNID(), receiver);
 								writer.write("{\"conn\":\"accepted\"}");
 								writer.flush();
 							} else {
 								writer.write("{\"conn\":\"refused\"}");
 								writer.flush();
 
-								try {
-									Thread.sleep(3000);;
-								} catch (InterruptedException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								writer.close();
+//								try {
+//									Thread.sleep(1000);
+//								} catch (InterruptedException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//								writer.close();
 
 								System.out.println("Connection refused: Not registered node.");
 							}

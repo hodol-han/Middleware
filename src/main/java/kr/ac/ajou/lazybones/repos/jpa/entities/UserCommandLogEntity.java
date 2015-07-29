@@ -1,4 +1,4 @@
-package kr.ac.ajou.lazybones.repos.entities;
+package kr.ac.ajou.lazybones.repos.jpa.entities;
 
 import java.util.Date;
 
@@ -14,36 +14,41 @@ import javax.persistence.Table;
 import org.hibernate.annotations.Type;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import kr.ac.ajou.lazybones.templates.NodeSensorLogForm;
+import kr.ac.ajou.lazybones.templates.UserCommandLogForm;
 
 @Entity
-@Table(name="NodeSensorLog")
-public class NodeSensorLogEntity {
-
+@Table(name="UserCommandLog")
+public class UserCommandLogEntity {
+	
 //	id int not null primary key auto_increment,
+//	uid varchar(20) not null,
 //	nid int not null,
-//	sensor_data text,
+//	command text,
 //	logged_at datetime,
-
+	
 	@Id
 	@Column
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-
+	
+	@ManyToOne
+	@JoinColumn(name="uid")
+	private UserEntity user;
+	
 	@ManyToOne
 	@JoinColumn(name="nid")
 	private NodeEntity node;
 	
+	@Column
 	@Type(type="text")
-	@Column(name="sensor_data")
-	private String sensorData;
+	private String command;
 	
 	@DateTimeFormat(iso=DateTimeFormat.ISO.DATE)
 	@Column(name="logged_at")
 	private Date loggedAt;
 
-	public NodeSensorLogEntity(){
-		
+
+	public UserCommandLogEntity() {
 	}
 
 	public Long getId() {
@@ -54,6 +59,14 @@ public class NodeSensorLogEntity {
 		this.id = id;
 	}
 
+	public UserEntity getUser() {
+		return user;
+	}
+
+	public void setUser(UserEntity user) {
+		this.user = user;
+	}
+
 	public NodeEntity getNode() {
 		return node;
 	}
@@ -62,12 +75,12 @@ public class NodeSensorLogEntity {
 		this.node = node;
 	}
 
-	public String getSensorData() {
-		return sensorData;
+	public String getCommand() {
+		return command;
 	}
 
-	public void setSensorData(String sensorData) {
-		this.sensorData = sensorData;
+	public void setCommand(String command) {
+		this.command = command;
 	}
 
 	public Date getLoggedAt() {
@@ -77,12 +90,12 @@ public class NodeSensorLogEntity {
 	public void setLoggedAt(Date loggedAt) {
 		this.loggedAt = loggedAt;
 	}
-
-	public NodeSensorLogForm transform(){
-		NodeSensorLogForm form = new NodeSensorLogForm();
+	
+	public UserCommandLogForm transform(){
+		UserCommandLogForm form = new UserCommandLogForm();
 		form.setId(this.getId());
-		form.setNid(this.getNode().getId());
-		form.setSensor_data(this.getSensorData());
+		form.setCommand(this.getCommand());
+		form.setUid(this.getUser().getId());
 		form.setLogged_at(this.getLoggedAt());
 		
 		return form;

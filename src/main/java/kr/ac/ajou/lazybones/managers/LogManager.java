@@ -7,64 +7,62 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-import kr.ac.ajou.lazybones.repos.NodeSensorLogRepository;
-import kr.ac.ajou.lazybones.repos.UserCommandLogRepository;
+import kr.ac.ajou.lazybones.repos.NodeHistoryRepository;
+import kr.ac.ajou.lazybones.repos.UserHistoryRepository;
 import kr.ac.ajou.lazybones.repos.entities.NodeEntity;
-import kr.ac.ajou.lazybones.repos.entities.NodeSensorLogEntity;
-import kr.ac.ajou.lazybones.repos.entities.UserCommandLogEntity;
+import kr.ac.ajou.lazybones.repos.entities.NodeHistoryEntity;
 import kr.ac.ajou.lazybones.repos.entities.UserEntity;
+import kr.ac.ajou.lazybones.repos.entities.UserHistoryEntity;
+
 
 @Repository
 public class LogManager {
 	
-	@Autowired
-	NodeSensorLogRepository nodeLogRepo;
-	
-	@Autowired
-	UserCommandLogRepository userLogRepo;
+	NodeHistoryRepository nodeLogRepo = new NodeHistoryRepository();
+	UserHistoryRepository userLogRepo = new UserHistoryRepository();
 		
 	public void logUserCommand(UserEntity user, NodeEntity node, String command){
 
 		Date loggedAt = Calendar.getInstance().getTime();
 		
-		UserCommandLogEntity logEntity = new UserCommandLogEntity();
-		logEntity.setUser(user);
-		logEntity.setNode(node);
-		logEntity.setCommand(command);
-		logEntity.setLoggedAt(loggedAt);
+		UserHistoryEntity logEntity = new UserHistoryEntity();
+		logEntity.setUID(user.getUserID());
+		logEntity.setNID(node.getNID());
+		logEntity.setQuery(command);
+		logEntity.setTime(loggedAt.toString());
 		
-		userLogRepo.save(logEntity);
+		userLogRepo.createUserHistoryItem(logEntity);
 	}
 	
 	public void logNodeSensorData(NodeEntity node, String sensorData){
 		
 		Date loggedAt = Calendar.getInstance().getTime();
 		
-		NodeSensorLogEntity logEntity = new NodeSensorLogEntity();
-		logEntity.setNode(node);
-		logEntity.setSensorData(sensorData);
-		logEntity.setLoggedAt(loggedAt);
+		NodeHistoryEntity logEntity = new NodeHistoryEntity();
+		logEntity.setNID(node.getNID());
+//		logEntity.set(sensorData);
+		logEntity.setTime(loggedAt.toString());
 		
-		nodeLogRepo.save(logEntity);	
+		nodeLogRepo.createNodeHistoryItems(logEntity);	
 		
 	}
 
-	public List<NodeSensorLogEntity> getNodeDataLog(UserEntity user, NodeEntity node){
-		if(node.getOwner().getId().equals(user.getId()))
-			return nodeLogRepo.findNodeSensorLogEntitiesByNode(node);
+	public List<NodeHistoryEntity> getNodeDataLog(UserEntity user, NodeEntity node){
+		if(node.getOwner().equals(user.getUserID()))
+			return nodeLogRepo.findNodeHistoriesbyNodeID(node.getNID());
 		else
 			return null;
 	}
 	
-	public List<UserCommandLogEntity> getUserCommandLogsByNode(UserEntity user, NodeEntity node){
-		if(node.getOwner().getId().equals(user.getId()))
-			return userLogRepo.findUserCommandLogEntitiesByNode(node);
+	public List<UserHistoryEntity> getUserCommandLogsByNode(UserEntity user, NodeEntity node){
+		if(node.getOwner().equals(user.getUserID()))
+			return userLogRepo.findUserHistoriesbyNodeID(node.getNID());
 		else
 			return null;
 	}
 
-	public List<UserCommandLogEntity> getUserCommandLogsByUser(UserEntity user){
-		return userLogRepo.findUserCommandLogEntitiesByUser(user);		
+	public List<UserHistoryEntity> getUserCommandLogsByUser(UserEntity user){
+		return userLogRepo.findUserHistoriesbyUserID(user.getUserID());		
 	}
 	
 }

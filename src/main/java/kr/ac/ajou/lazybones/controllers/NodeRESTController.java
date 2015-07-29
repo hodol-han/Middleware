@@ -41,7 +41,7 @@ public class NodeRESTController {
 	NodeManager nodeManager;
 	
 	@RequestMapping(value = "/Node/{id}/Query", method = RequestMethod.POST)
-	public @ResponseBody Result query(@PathVariable("id") Long nodeId, @RequestBody String queryFormat, HttpServletRequest request) {
+	public @ResponseBody Result query(@PathVariable("id") Integer nodeId, @RequestBody String queryFormat, HttpServletRequest request) {
 		// Echo to test
 		Result result = new Result();
 		
@@ -57,8 +57,15 @@ public class NodeRESTController {
 		}
 		
 		UserEntity user = userManager.findUserByKeyhash(query.getCredential());
-		NodeEntity node = nodeManager.findById(nodeId);
+		NodeEntity node = nodeManager.findNodeById(nodeId);
 		String command = query.getCommand();
+		
+		if(user == null || node == null){
+			result.setResult("Failed");
+			result.setReason("The user or the node is not exists.");
+			return result;			
+		}
+			
 		
 		logManager.logUserCommand(user, node, command);
 				

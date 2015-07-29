@@ -27,12 +27,6 @@ public class TcpReceiver implements Receiver {
 			return this.reader.readLine();
 		} catch (IOException e) {
 			e.printStackTrace();
-			try {
-				reader.close();
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
 		}
 		return null;
 	}

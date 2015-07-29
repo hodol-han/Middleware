@@ -1,89 +1,62 @@
 package kr.ac.ajou.lazybones.repos.entities;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
-@Entity
-@Table(name = "Node")
 public class NodeEntity {
-
-	@Id
-	@Column
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Long id;
+    private Integer NID;
+	private String serialNumber;
+    private String owner;
+    private String productName;
+    private String nodeName;
+    
+	public NodeEntity() {
+		
+	}
 	
-	@ManyToOne
-	@JoinColumn(name="owner")
-	private UserEntity owner;
-
-	@Column
-	private String serial;
-
-	@Column(name = "product_name")
-	private String productName;
-
-	@Column
-	private String name;
-
-	public Long getId() {
-		return id;
+	public NodeEntity(Integer nid, String sn, String owner, String pn, String name) {
+		this.NID = nid;
+		this.serialNumber = sn;
+		this.owner = owner;
+		this.productName = pn;
+		this.nodeName = name;
 	}
 
-	public void setId(Long id) {
-		this.id = id;
+	public Integer getNID() {
+		return NID;
 	}
 
-	public String getSerial() {
-		return serial;
+	public void setNID(Integer nid) {
+		this.NID = nid;
+	}
+	
+	public String getSerialNumber() {
+		return serialNumber;
 	}
 
-	public void setSerial(String serial) {
-		this.serial = serial;
+	public void setSerialNumber(String sn) {
+		this.serialNumber = sn;
+	}
+	
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
 	}
 
 	public String getProductName() {
 		return productName;
 	}
 
-	public void setProductName(String productName) {
-		this.productName = productName;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public UserEntity getOwner() {
-		return owner;
-	}
-
-	public void setOwner(UserEntity owner) {
-		this.owner = owner;
+	public void setProductName(String pn) {
+		this.productName = pn;
 	}
 	
-	public NodeEntity(){
-		
+	public String getNodeName() {
+		return nodeName;
 	}
 
-	public NodeEntity(UserEntity owner, String serial, String productName, String name) {
-		super();
-		this.owner = owner;
-		this.serial = serial;
-		this.productName = productName;
-		this.name = name;
+	public void setNodeName(String name) {
+		this.nodeName = name;
 	}
-	
-	
-
 
 }
