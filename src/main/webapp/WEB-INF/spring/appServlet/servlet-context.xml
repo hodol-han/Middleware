@@ -34,7 +34,7 @@
 			<exclude-mapping path="/User/Register/**"/>
 			<exclude-mapping path="/Node/*/Query"/>
 				
-			<beans:bean class="kr.ac.ajou.lazybones.interceptors.AccessManagemer" />
+			<beans:bean class="kr.ac.ajou.lazybones.interceptors.AccessManager" />
 		</interceptor>
 	</interceptors>
 

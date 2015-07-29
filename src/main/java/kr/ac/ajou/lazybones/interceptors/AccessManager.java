@@ -12,7 +12,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import kr.ac.ajou.lazybones.managers.UserManager;
 
-public class AccessManagemer extends HandlerInterceptorAdapter {
+public class AccessManager extends HandlerInterceptorAdapter {
 
 	@Autowired
 	UserManager userManager;
@@ -26,7 +26,7 @@ public class AccessManagemer extends HandlerInterceptorAdapter {
 
 			// Get session --> if null --> Return to Login page.
 			if (credential == null) {
-				response.sendRedirect("/Middleware/User/Login");
+				response.sendRedirect("/User/Login");
 				return false;
 			}
 
@@ -34,7 +34,7 @@ public class AccessManagemer extends HandlerInterceptorAdapter {
 
 			if (userManager.findUserByKeyhash(credential) == null) {
 				request.getSession().invalidate();
-				response.sendRedirect("/Middleware/User/Login");
+				response.sendRedirect("/User/Login");
 				return false;
 			}
 
