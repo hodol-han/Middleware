@@ -3,14 +3,14 @@ package kr.ac.ajou.lazybones.repos.entities;
 public class UserHistoryEntity {
 	private String uid;
 	private String time;
-	private Integer nid;
+	private String nid;
 	private String query;
     
 	public UserHistoryEntity() {
 		
 	}
 	
-	public UserHistoryEntity(String uid, String time, Integer nid, String query) {
+	public UserHistoryEntity(String uid, String time, String nid, String query) {
 		this.uid = uid;
 		this.time = time;
 		this.nid = nid;
@@ -33,11 +33,11 @@ public class UserHistoryEntity {
 		this.time = time;
 	}
 	
-	public Integer getNID() {
+	public String getNID() {
 		return nid;
 	}
 
-	public void setNID(Integer id) {
+	public void setNID(String id) {
 		this.nid = id;
 	}
 

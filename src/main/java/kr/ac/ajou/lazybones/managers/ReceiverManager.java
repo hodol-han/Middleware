@@ -22,13 +22,13 @@ public class ReceiverManager {
 	@Autowired
 	private DataDispatcher disp;
 
-	public static final Integer MONITOR_INTERVAL = 3000;
+	public static final int MONITOR_INTERVAL = 2000;
 	private Timer nodeMonitorTimer;
 
 	private class LivenessMonitorTask extends TimerTask {
 		@Override
 		public void run() {
-			for (Entry<Integer, ReceiverThread> entry : receivers.entrySet()) {
+			for (Entry<String, ReceiverThread> entry : receivers.entrySet()) {
 				if (!entry.getValue().isConnected()) {
 					System.out.println("Receiver Disconnected: " + entry.getKey());
 					detachReceiver(entry.getKey());
@@ -38,7 +38,7 @@ public class ReceiverManager {
 		}
 	}
 
-	private Map<Integer, ReceiverThread> receivers;
+	private Map<String, ReceiverThread> receivers;
 
 	public ReceiverManager() {
 		this.receivers = new HashMap<>();
@@ -47,18 +47,18 @@ public class ReceiverManager {
 	/**
 	 * @param receivers
 	 */
-	public ReceiverManager(Map<Integer, ReceiverThread> receivers) {
+	public ReceiverManager(Map<String, ReceiverThread> receivers) {
 		this.receivers = receivers;
 	}
 
-	public synchronized void attachReceiver(Integer nid, Receiver receiver) {
+	public synchronized void attachReceiver(String nid, Receiver receiver) {
 		ReceiverThread thread = new ReceiverThread(receiver, disp);
 
 		this.receivers.put(nid, thread);
 		thread.start();
 	}
 
-	public synchronized void detachReceiver(Integer nid) {
+	public synchronized void detachReceiver(String nid) {
 		ReceiverThread thread = this.receivers.get(nid);
 		if (thread != null) {
 			thread.interrupt();

@@ -20,13 +20,13 @@ import kr.ac.ajou.lazybones.templates.Result;
 @Component
 public class RequesterManager {
 
-	public static final Integer MONITOR_INTERVAL = 3000;
+	public static final int MONITOR_INTERVAL = 2000;
 	private Timer nodeMonitorTimer;
 
 	private class LivenessMonitorTask extends TimerTask {
 		@Override
 		public void run() {
-			for (Entry<Integer, Requester> entry : requesters.entrySet()) {
+			for (Entry<String, Requester> entry : requesters.entrySet()) {
 				if (!entry.getValue().isConnected()) {
 					System.out.println("Requester disconnected: " + entry.getKey());
 					detachRequester(entry.getKey());
@@ -37,13 +37,13 @@ public class RequesterManager {
 		}
 	}
 
-	private Map<Integer, Requester> requesters = new HashMap<>();
+	private Map<String, Requester> requesters = new HashMap<>();
 
-	public synchronized void attachRequester(Integer nid, Requester requester) {
+	public synchronized void attachRequester(String nid, Requester requester) {
 		this.requesters.put(nid, requester);
 	}
 
-	public synchronized void detachRequester(Integer nid) {
+	public synchronized void detachRequester(String nid) {
 		this.requesters.remove(nid);
 	}
 

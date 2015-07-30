@@ -85,19 +85,20 @@ public class UserController {
 			HttpServletRequest request) {
 		try {
 			// Get and delete user.
-			UserEntity user = new UserEntity();
-			
-			user.setUserID(id);
-			user.setName(name);
-			user.setPwd(pwd);
-			
-			userEntityManager.delete(user);
+			UserEntity user = userEntityManager.findById(id);
+			String key = (String) request.getSession().getAttribute("credential");
 
-			// Invalidate session
-			request.getSession().invalidate();
+			if (user.getUserKey().equals(key))
+				if (user.getPwd().equals(pwd)) {
+					userEntityManager.delete(user);
 
-			// For testing
-			System.out.println("Sucess to unregister: " + id + ", " + name + ", " + pwd);
+					// Invalidate session
+					request.getSession().invalidate();
+
+					// For testing
+					System.out.println("Sucess to unregister: " + id + ", " + name + ", " + pwd);
+				} else
+					System.out.println("You're trying to hack other user, huh?");
 		} catch (Exception e) {
 			System.err.println("Fail to unregister");
 		}

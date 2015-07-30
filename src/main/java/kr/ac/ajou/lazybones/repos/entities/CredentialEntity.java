@@ -4,7 +4,7 @@ import java.util.*;
 
 
 public class CredentialEntity {
-	private Integer cid;
+	private String cid;
 	private String uid;
 	private String issuedAt;
 	
@@ -12,17 +12,17 @@ public class CredentialEntity {
 		
 	}
 	
-	public CredentialEntity(Integer cid, String uid, String issue) {
+	public CredentialEntity(String cid, String uid, String issue) {
 		this.cid = cid;
 		this.uid = uid;
 		this.issuedAt = issue;
 	}
 	
-	public Integer getCID() {
+	public String getCID() {
 		return cid;
 	}
 
-	public void setCID(Integer cid) {
+	public void setCID(String cid) {
 		this.cid = cid;
 	}
 

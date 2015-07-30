@@ -73,7 +73,7 @@ public class NodeController {
 	}
 
 	@RequestMapping(value = "/Node/{id}/Unregister", method = RequestMethod.GET)
-	public String unregisterNode(@PathVariable("id") Integer nid, HttpServletRequest request) {
+	public String unregisterNode(@PathVariable("id") String nid, HttpServletRequest request) {
 
 		// TODO: Get user id using issued token.
 		UserEntity user = this.findUser(request);

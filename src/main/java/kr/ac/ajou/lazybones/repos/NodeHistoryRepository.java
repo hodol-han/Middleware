@@ -1,7 +1,10 @@
 package kr.ac.ajou.lazybones.repos;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
@@ -28,30 +31,22 @@ public class NodeHistoryRepository {
 	}
 	
 	public NodeHistoryRepository (NodeHistoryEntity ent) {
-		nHistoryDB = new NodeHistory(ent.getNID(), ent.getTime(), ent.getDoor(), ent.getLight(), 
-				ent.getProximity(), ent.getAlarm(), ent.getTemperature(), ent.getHumidity());
+		nHistoryDB = new NodeHistory(ent.getNID(), ent.getTime(), ent.getSAValues());
 		mapper = DynamoDBManager.getMapper();
 	}
 	
 	public void createNodeHistoryItems(NodeHistoryEntity ent) {
-		createNodeHistoryItems(nHistoryDB, ent.getNID(), ent.getTime(), ent.getDoor(), ent.getLight(), ent.getProximity(),
-				ent.getAlarm(), ent.getTemperature(), ent.getHumidity());
+		createNodeHistoryItems(nHistoryDB, ent.getNID(), ent.getTime(), ent.getSAValues());
 	}
 	
-	private void createNodeHistoryItems(NodeHistory nHistoryDB, Integer nid, String time, String door, String light, String prox,
-			String alarm, String temper, String hum) {
+	private void createNodeHistoryItems(NodeHistory nHistoryDB, String nid, String time, String values) {
 		nHistoryDB.setNodeID(nid);
 		nHistoryDB.setTime(time);
-		nHistoryDB.setDoor(door);
-		nHistoryDB.setLight(light);
-		nHistoryDB.setProximity(prox);
-		nHistoryDB.setAlarm(alarm);
-		nHistoryDB.setTemperature(temper);
-		nHistoryDB.setHumidity(hum);
+		nHistoryDB.setSAValues(values);
 		
 		mapper.save(nHistoryDB);
 		
-		Integer hashKey = nid;
+		String hashKey = nid;
 		String rangeKey = time;
 		NodeHistory nhKey = new NodeHistory();
 		nhKey.setNodeID(hashKey);
@@ -65,9 +60,7 @@ public class NodeHistoryRepository {
         
 		System.out.println("Item created: ");
 		for(NodeHistory nh : latestNodeHistory) {
-			System.out.format("SerialNumber=%s, Time=%s, Door=%s, Light=%s, Proximity=%s, Alarm=%s, Temperature=%s,"
-					+ "Humidity=%s\n", nh.getNodeID(), nh.getTime(), nh.getDoor(), nh.getLight(), nh.getProximity(), nh.getAlarm(),
-					nh.getTemperature(), nh.getHumidity());
+			System.out.format("SerialNumber=%s, Time=%s, SAValues=%s\n", nh.getNodeID(), nh.getTime(), nh.getSAValues());
 		}
 	}
 	
@@ -75,9 +68,9 @@ public class NodeHistoryRepository {
 		printNodeHistoryItems(ent.getNID(), ent.getTime());
 	}
 	
-	private void printNodeHistoryItems(Integer nid, String time) {
+	private void printNodeHistoryItems(String nid, String time) {
 		
-        Integer hashKey = nid;
+        String hashKey = nid;
 		String rangeKey = time;
 		NodeHistory nhKey = new NodeHistory();
 		nhKey.setNodeID(hashKey);
@@ -96,9 +89,7 @@ public class NodeHistoryRepository {
 		}
 		
 		for(NodeHistory nh : latestNodeHistory) {
-			System.out.format("SerialNumber=%s, Time=%s, Door=%s, Light=%s, Proximity=%s, Alarm=%s, Temperature=%s,"
-					+ "Humidity=%s\n", nh.getNodeID(), nh.getTime(), nh.getDoor(), nh.getLight(), nh.getProximity(), nh.getAlarm(),
-					nh.getTemperature(), nh.getHumidity());
+			System.out.format("SerialNumber=%s, Time=%s, SAValues=%s\n", nh.getNodeID(), nh.getTime(), nh.getSAValues());
 		}
 	}
 	
@@ -106,8 +97,8 @@ public class NodeHistoryRepository {
 		return findNodeHistories(ent.getNID(), ent.getTime());
 	}
 	
-	private List<NodeHistoryEntity> findNodeHistories (Integer nid, String time) {
-		Integer hashKey = nid;
+	private List<NodeHistoryEntity> findNodeHistories (String nid, String time) {
+		String hashKey = nid;
 		String rangeKey = time;
 		NodeHistory nhKey = new NodeHistory();
 		nhKey.setNodeID(hashKey);
@@ -132,12 +123,7 @@ public class NodeHistoryRepository {
 			
 			ret.setNID(n.getNodeID());
 			ret.setTime(n.getTime());
-			ret.setDoor(n.getDoor());
-			ret.setLight(n.getLight());
-			ret.setProximity(n.getProximity());
-			ret.setAlarm(n.getAlarm());
-			ret.setTemperature(n.getTemperature());
-			ret.setHumidity(n.getHumidity());
+			ret.setSAValues(n.getSAValues());
 			
 			list.add(ret);
 		}
@@ -145,10 +131,10 @@ public class NodeHistoryRepository {
 		return list;
 	}
 	
-	public List<NodeHistoryEntity> findNodeHistoriesbyNodeID(Integer id) {
+	public List<NodeHistoryEntity> findNodeHistoriesbyNodeID(String id) {
 		DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
 		scanExpression.addFilterCondition("NodeID", new Condition().withComparisonOperator(ComparisonOperator.EQ)
-				.withAttributeValueList(new AttributeValue().withN(id.toString())));
+				.withAttributeValueList(new AttributeValue().withS(id)));
 		List<NodeHistory> scanResult = mapper.scan(NodeHistory.class, scanExpression);
 		
 		List<NodeHistoryEntity> list = new ArrayList<>();
@@ -158,12 +144,7 @@ public class NodeHistoryRepository {
 				
 			nhe.setNID(n.getNodeID());
 			nhe.setTime(n.getTime());
-			nhe.setDoor(n.getDoor());
-			nhe.setLight(n.getLight());
-			nhe.setProximity(n.getProximity());
-			nhe.setAlarm(n.getAlarm());
-			nhe.setTemperature(n.getTemperature());
-			nhe.setHumidity(n.getHumidity());
+			nhe.setSAValues(n.getSAValues());
 			
 			list.add(nhe);
 		}
@@ -172,12 +153,10 @@ public class NodeHistoryRepository {
 	}
 	
 	public void updateNodeHistoryItem(NodeHistoryEntity ent) {
-		updateNodeHistoryItem(ent.getNID(), ent.getTime(), ent.getDoor(), ent.getLight(),
-				ent.getProximity(), ent.getAlarm(), ent.getTemperature(), ent.getHumidity());
+		updateNodeHistoryItem(ent.getNID(), ent.getTime(), ent.getSAValues());
 	}
 	
-	private void updateNodeHistoryItem(Integer nid, String time, String door, String light, String prox,
-			String alarm, String temper, String hum) {
+	private void updateNodeHistoryItem(String nid, String time, String values) {
 		NodeHistory itemRetrieved;
 		
 		if(time != null) {
@@ -187,16 +166,9 @@ public class NodeHistoryRepository {
 		else
 			itemRetrieved = mapper.load(NodeHistory.class, nid);
 		
-		itemRetrieved.setDoor(door);
-		itemRetrieved.setLight(light);
-		itemRetrieved.setProximity(prox);
-		itemRetrieved.setAlarm(alarm);
-		itemRetrieved.setTemperature(temper);
-		itemRetrieved.setHumidity(hum);
+		itemRetrieved.setSAValues(values);
         System.out.println("Item updated: ");
-        System.out.format("SerialNumber=%s, Time=%s, Door=%s, Light=%s, Proximity=%s, Alarm=%s, Temperature=%s,"
-					+ "Humidity=%s\n", itemRetrieved.getNodeID(), itemRetrieved.getTime(), itemRetrieved.getDoor(), itemRetrieved.getLight(),
-					itemRetrieved.getProximity(), itemRetrieved.getAlarm(), itemRetrieved.getTemperature(), itemRetrieved.getHumidity());
+        System.out.format("SerialNumber=%s, Time=%s, SAValues=%s\n", itemRetrieved.getNodeID(), itemRetrieved.getTime(), itemRetrieved.getSAValues());
 	}
 	
 	/*
@@ -204,7 +176,7 @@ public class NodeHistoryRepository {
 		findUpdatedNodeHistoryItems(nHistory.getSerialNumber(), nHistory.getTime());
 	}
 	
-	public void findUpdatedNodeHistoryItems(Integer nid, String time) {
+	public void findUpdatedNodeHistoryItems(String nid, String time) {
 		DynamoDBMapperConfig config = new DynamoDBMapperConfig(DynamoDBMapperConfig.ConsistentReads.CONSISTENT);
 		NodeHistory updatedItem;
 		
@@ -222,7 +194,7 @@ public class NodeHistoryRepository {
 		deleteNodeHistoryItem(ent.getNID(), ent.getTime());
 	}
 	
-	private void deleteNodeHistoryItem(Integer nid, String time) {
+	private void deleteNodeHistoryItem(String nid, String time) {
 		DynamoDBMapperConfig config = new DynamoDBMapperConfig(DynamoDBMapperConfig.ConsistentReads.CONSISTENT);
 		NodeHistory updatedItem;
 		NodeHistory deletedItem;
@@ -243,66 +215,92 @@ public class NodeHistoryRepository {
         else
         	System.out.println("Fail - The item is still remained.");
 	}
+	
+	// range format example = (7L*24L*60L*60L*1000L) (1 week)
+	public List<NodeHistoryEntity> findSpecificNodeHistoryInRangeTime (String nid, Long range) {
+		String hashKey = nid;
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MMdd'T'HH:mm:ss.SSS'Z'");
+		
+		Long currentTimeMilli = (new Date()).getTime();
+		Long rangeTimeMilli = (new Date()).getTime() - range;
+		dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String currentTime = dateFormatter.format(currentTimeMilli);
+		String rangeTime = dateFormatter.format(rangeTimeMilli);
+		
+		NodeHistory nhKey = new NodeHistory();
+		nhKey.setNodeID(hashKey);
+		List<NodeHistory> latestNodeHistory;
+		
+		
+		Condition rangeKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.BETWEEN.toString())
+			.withAttributeValueList(new AttributeValue().withS(currentTime), new AttributeValue().withS(rangeTime));
+		
+		DynamoDBQueryExpression<NodeHistory> queryExpression = new DynamoDBQueryExpression<NodeHistory>().withHashKeyValues(nhKey)
+			.withRangeKeyCondition("Time", rangeKeyCondition);
+		
+		latestNodeHistory = mapper.query(NodeHistory.class, queryExpression);
+		
+		return this.transform(latestNodeHistory);
+	}
+	
+//	public List<NodeHistoryEntity> findNodeHistoryInRangeTime (Long range) {
+//		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MMdd'T'HH:mm:ss.SSS'Z'");
+//		
+//		Long currentTimeMilli = (new Date()).getTime();
+//		Long rangeTimeMilli = (new Date()).getTime() - range;
+//		dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+//		String currentTime = dateFormatter.format(currentTimeMilli);
+//		String rangeTime = dateFormatter.format(rangeTimeMilli);
+//		
+//		DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
+//		scanExpression.addFilterCondition("Time", new Condition().withComparisonOperator(ComparisonOperator.BETWEEN)
+//				.withAttributeValueList(new AttributeValue().withS(currentTime), new AttributeValue().withS(rangeTime)));
+//		List<NodeHistory> scanResult = mapper.scan(NodeHistory.class, scanExpression);
+//		
+//		return this.transform(scanResult);
+//	}
+	
+	private List<NodeHistoryEntity> transform(List<NodeHistory> target){
+		List<NodeHistoryEntity> list = new ArrayList<>();
+		for(NodeHistory item : target){
+			NodeHistoryEntity temp = new NodeHistoryEntity();
+			temp.setNID(item.getNodeID());
+			temp.setSAValues(item.getSAValues());
+			temp.setTime(item.getTime());
+			
+			list.add(temp);
+		}
+		return list;
+	}
     
     @DynamoDBTable(tableName="NodeHistory")
     public static class NodeHistory {
-        private Integer NodeID;
+        private String NodeID;
         private String Time;
-        private String Door;
-        private String Light;
-        private String Proximity;
-        private String Alarm;
-        private String Temperature;
-        private String Humidity;
+        private String SAValues;
         
         public NodeHistory() {
         	
         }
         
-        public NodeHistory(Integer nid, String time, String door, String light, String prox,
-    			String alarm, String temper, String hum) {
+        public NodeHistory(String nid, String time, String values) {
 			// TODO Auto-generated constructor stub
         	this.NodeID = nid;
         	this.Time = time;
-        	this.Door = door;
-        	this.Light = light;
-        	this.Proximity = prox;
-        	this.Alarm = alarm;
-        	this.Temperature = temper;
-        	this.Humidity = hum;
+        	this.SAValues = values;
 		}
                 
         @DynamoDBHashKey(attributeName="NodeID")
-        public Integer getNodeID() { return NodeID; }
-        public void setNodeID(Integer NodeID) { this.NodeID = NodeID; }
+        public String getNodeID() { return NodeID; }
+        public void setNodeID(String NodeID) { this.NodeID = NodeID; }
         
         @DynamoDBRangeKey(attributeName="Time")
         public String getTime() { return Time; }    
         public void setTime(String Time) { this.Time = Time; }
         
-        @DynamoDBAttribute(attributeName="Door")
-        public String getDoor() { return Door; }
-        public void setDoor(String Door) { this.Door = Door; }
-        
-        @DynamoDBAttribute(attributeName="Light")
-        public String getLight() { return Light; }
-        public void setLight(String Light) { this.Light = Light; }
-        
-        @DynamoDBAttribute(attributeName="Proximity")
-        public String getProximity() { return Proximity; }
-        public void setProximity(String Proximity) { this.Proximity = Proximity; }
-        
-        @DynamoDBAttribute(attributeName="Alarm")
-        public String getAlarm() { return Alarm; }
-        public void setAlarm(String Alarm) { this.Alarm = Alarm; }
-        
-        @DynamoDBAttribute(attributeName="Temperature")
-        public String getTemperature() { return Temperature; }
-        public void setTemperature(String Temperature) { this.Temperature = Temperature; }
-        
-        @DynamoDBAttribute(attributeName="humidity")
-        public String getHumidity() { return Humidity; }
-        public void setHumidity(String Humidity) { this.Humidity = Humidity; }
+        @DynamoDBAttribute(attributeName="SAValues")
+        public String getSAValues() { return SAValues; }
+        public void setSAValues(String SAValues) { this.SAValues = SAValues; }        
         
     }
 }

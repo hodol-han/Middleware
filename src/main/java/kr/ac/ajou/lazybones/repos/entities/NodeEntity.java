@@ -1,7 +1,7 @@
 package kr.ac.ajou.lazybones.repos.entities;
 
 public class NodeEntity {
-    private Integer NID;
+    private String NID;
 	private String serialNumber;
     private String owner;
     private String productName;
@@ -11,7 +11,7 @@ public class NodeEntity {
 		
 	}
 	
-	public NodeEntity(Integer nid, String sn, String owner, String pn, String name) {
+	public NodeEntity(String nid, String sn, String owner, String pn, String name) {
 		this.NID = nid;
 		this.serialNumber = sn;
 		this.owner = owner;
@@ -19,11 +19,11 @@ public class NodeEntity {
 		this.nodeName = name;
 	}
 
-	public Integer getNID() {
+	public String getNID() {
 		return NID;
 	}
 
-	public void setNID(Integer nid) {
+	public void setNID(String nid) {
 		this.NID = nid;
 	}
 	

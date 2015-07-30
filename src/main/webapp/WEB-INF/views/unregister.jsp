@@ -46,7 +46,7 @@
 				<form method="post" action="<c:url value="/User/Unregister/"/>">
 					<div>
 						<label class="field-label">Id</label> <input id="id" name="id"
-							type="text" value="<c:out value='${user.id}'/>"/>
+							type="text" value="<c:out value='${user.userID}'/>"/>
 					</div>
 					<div>
 						<label class="field-label">Name</label> <input id="name" name="name"

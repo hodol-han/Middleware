@@ -67,11 +67,11 @@
 				<tbody>
 					<c:forEach items="${nodes}" var="entry" varStatus="status">
 						<tr>
-							<td><c:out value="${entry.id}"></c:out></td>
-							<td><c:out value="${entry.name}"></c:out></td>
-							<td><c:out value="${entry.serial}"></c:out></td>
+							<td><c:out value="${entry.NID}"></c:out></td>
+							<td><c:out value="${entry.nodeName}"></c:out></td>
+							<td><c:out value="${entry.serialNumber}"></c:out></td>
 							<td><c:out value="${entry.productName}"></c:out></td>
-							<td><a href="<c:url value="/Node/${entry.id}/Unregister"/>">Unregister</a></td>
+							<td><a href="<c:url value="/Node/${entry.NID}/Unregister"/>">Unregister</a></td>
 						</tr>
 					</c:forEach>
 				</tbody>

@@ -18,7 +18,7 @@ public class CredentialRepository {
 		mapper = DynamoDBManager.getMapper();
 	}
 	
-	public CredentialRepository (Integer cid, String uid, String issue) {
+	public CredentialRepository (String cid, String uid, String issue) {
 		credential.setCID(cid);
 		credential.setUID(uid);
 		credential.setIssuedAt(issue);
@@ -30,7 +30,7 @@ public class CredentialRepository {
 		createCredentialItems(credentialDB, credential.getCID(), credential.getUID(), credential.getIssuedAt());
 	}
 
-	public void createCredentialItems(Credential credentialDB, Integer cid, String uid, String issuedAt) {
+	public void createCredentialItems(Credential credentialDB, String cid, String uid, String issuedAt) {
 		credentialDB.setCID(cid);
 		credentialDB.setUID(uid);
 		credentialDB.setIssuedAt(issuedAt);
@@ -45,7 +45,7 @@ public class CredentialRepository {
 		findCredentialItems(credential.getCID());
 	}
 	
-	public void findCredentialItems(Integer cid) {
+	public void findCredentialItems(String cid) {
 		Credential itemRetrieved = mapper.load(Credential.class, cid);
         System.out.println("Item retrieved: ");
         System.out.println(itemRetrieved);
@@ -55,7 +55,7 @@ public class CredentialRepository {
 		updateCredentialItems(credential.getCID(), credential.getUID(), credential.getIssuedAt());
 	}
 	
-	public void updateCredentialItems(Integer cid, String uid, String issuedAt) {
+	public void updateCredentialItems(String cid, String uid, String issuedAt) {
 		Credential itemRetrieved = mapper.load(Credential.class, cid);
 		
 		itemRetrieved.setUID(uid);
@@ -69,7 +69,7 @@ public class CredentialRepository {
 		findUpdatedCredentialItems(credential.getCID());
 	}
 	
-	public void findUpdatedCredentialItems(Integer cid) {
+	public void findUpdatedCredentialItems(String cid) {
 		DynamoDBMapperConfig config = new DynamoDBMapperConfig(DynamoDBMapperConfig.ConsistentReads.CONSISTENT);
 		Credential updatedItem = mapper.load(Credential.class, cid, config);
         System.out.println("Retrieved the previously updated item: ");
@@ -80,7 +80,7 @@ public class CredentialRepository {
 		deleteCredentialItems(credential.getCID());
 	}
 	
-	public void deleteCredentialItems(Integer cid) {
+	public void deleteCredentialItems(String cid) {
 		DynamoDBMapperConfig config = new DynamoDBMapperConfig(DynamoDBMapperConfig.ConsistentReads.CONSISTENT);
 		Credential updatedItem = mapper.load(Credential.class, cid, config);
 		mapper.delete(updatedItem);
@@ -94,7 +94,7 @@ public class CredentialRepository {
 	
     @DynamoDBTable(tableName="Credential")
     public static class Credential {
-        private Integer CID;
+        private String CID;
         private String UID;
         private String IssuedAt;
         
@@ -102,7 +102,7 @@ public class CredentialRepository {
         	
         }
         
-        public Credential(Integer cid, String uid, String issue) {
+        public Credential(String cid, String uid, String issue) {
 			// TODO Auto-generated constructor stub
         	this.CID = cid;
         	this.UID = uid;
@@ -110,8 +110,8 @@ public class CredentialRepository {
 		}
         
         @DynamoDBHashKey(attributeName="CID")
-        public Integer getCID() { return CID; }
-        public void setCID(Integer CID) { this.CID = CID; }
+        public String getCID() { return CID; }
+        public void setCID(String CID) { this.CID = CID; }
         
         @DynamoDBAttribute(attributeName="UID")
         public String getUID() { return UID; }    

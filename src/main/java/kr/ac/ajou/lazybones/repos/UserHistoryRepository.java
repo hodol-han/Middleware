@@ -1,7 +1,10 @@
 package kr.ac.ajou.lazybones.repos;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBAttribute;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBHashKey;
@@ -37,7 +40,7 @@ public class UserHistoryRepository {
 		createUserHistoryItem(uHistoryDB, ent.getUID(), ent.getTime(), ent.getNID(), ent.getQuery());
 	}
 
-	public void createUserHistoryItem(UserHistory userHistory, String uid, String time, Integer nid, String query) {
+	public void createUserHistoryItem(UserHistory userHistory, String uid, String time, String nid, String query) {
 		userHistory.setUserID(uid);
 		userHistory.setTime(time);
 		userHistory.setNodeID(nid);
@@ -121,10 +124,10 @@ public class UserHistoryRepository {
 		return list;
 	}
 
-	public List<UserHistoryEntity> findUserHistoriesbyNodeID(Integer id) {
+	public List<UserHistoryEntity> findUserHistoriesbyNodeID(String id) {
 		DynamoDBScanExpression scanExpression = new DynamoDBScanExpression();
 		scanExpression.addFilterCondition("NodeID", new Condition().withComparisonOperator(ComparisonOperator.EQ)
-				.withAttributeValueList(new AttributeValue().withN(id.toString())));
+				.withAttributeValueList(new AttributeValue().withS(id)));
 		List<UserHistory> scanResult = mapper.scan(UserHistory.class, scanExpression);
 		List<UserHistoryEntity> list = transform(scanResult);
 
@@ -164,7 +167,7 @@ public class UserHistoryRepository {
 		updateUserHistoryItems(ent.getUID(), ent.getTime(), ent.getNID(), ent.getQuery());
 	}
 
-	private void updateUserHistoryItems(String uid, String time, Integer nid, String query) {
+	private void updateUserHistoryItems(String uid, String time, String nid, String query) {
 		UserHistory itemRetrieved;
 
 		if (time != null) {
@@ -179,6 +182,58 @@ public class UserHistoryRepository {
 		System.out.format("UserID=%s, Time=%s, NodeID=%s, Query=%s\n", itemRetrieved.getUserID(),
 				itemRetrieved.getTime(), itemRetrieved.getNodeID(), itemRetrieved.getQuery());
 	}
+	
+	// range format example = (7L*24L*60L*60L*1000L) (1 week)
+	public List<UserHistoryEntity> findUserHistoriesByUserIDInRangeTime (String uid, Long range) {
+		String hashKey = uid;
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MMdd'T'HH:mm:ss.SSS'Z'");
+		
+		Long currentTimeMilli = (new Date()).getTime();
+		Long rangeTimeMilli = (new Date()).getTime() - range;
+		dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String currentTime = dateFormatter.format(currentTimeMilli);
+		String rangeTime = dateFormatter.format(rangeTimeMilli);
+		
+		UserHistory uhKey = new UserHistory();
+		uhKey.setUserID(hashKey);
+		List<UserHistory> latestUserHistory;
+		
+		Condition rangeKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.BETWEEN.toString())
+			.withAttributeValueList(new AttributeValue().withS(rangeTime), new AttributeValue().withS(currentTime));
+		
+		DynamoDBQueryExpression<UserHistory> queryExpression = new DynamoDBQueryExpression<UserHistory>().withHashKeyValues(uhKey)
+			.withRangeKeyCondition("Time", rangeKeyCondition);
+		
+		latestUserHistory = mapper.query(UserHistory.class, queryExpression);
+		
+		return this.transform(latestUserHistory);		
+	}
+	
+	public List<UserHistoryEntity> findUserHistoriesByNodeIDInRangeTime (String nid, Long range) {
+		String hashKey = nid;
+		SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MMdd'T'HH:mm:ss.SSS'Z'");
+		
+		Long currentTimeMilli = (new Date()).getTime();
+		Long rangeTimeMilli = (new Date()).getTime() - range;
+		dateFormatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+		String currentTime = dateFormatter.format(currentTimeMilli);
+		String rangeTime = dateFormatter.format(rangeTimeMilli);
+		
+		UserHistory uhKey = new UserHistory();
+		uhKey.setNodeID(hashKey);
+		List<UserHistory> latestUserHistory;
+		
+		Condition rangeKeyCondition = new Condition().withComparisonOperator(ComparisonOperator.BETWEEN.toString())
+			.withAttributeValueList(new AttributeValue().withS(currentTime), new AttributeValue().withS(rangeTime));
+		
+		DynamoDBQueryExpression<UserHistory> queryExpression = new DynamoDBQueryExpression<UserHistory>().withHashKeyValues(uhKey)
+			.withRangeKeyCondition("Time", rangeKeyCondition);
+		
+		latestUserHistory = mapper.query(UserHistory.class, queryExpression);
+		
+		return this.transform(latestUserHistory);		
+	}
+
 
 	/*
 	 * public void findUpdatedUserHistoryItems() {
@@ -225,14 +280,14 @@ public class UserHistoryRepository {
 	public static class UserHistory {
 		private String UserID;
 		private String Time;
-		private Integer NodeID;
+		private String NodeID;
 		private String Query;
 
 		public UserHistory() {
 
 		}
 
-		public UserHistory(String uid, String time, Integer nid, String query) {
+		public UserHistory(String uid, String time, String nid, String query) {
 			// TODO Auto-generated constructor stub
 			this.UserID = uid;
 			this.Time = time;
@@ -259,11 +314,11 @@ public class UserHistoryRepository {
 		}
 
 		@DynamoDBAttribute(attributeName = "NodeID")
-		public Integer getNodeID() {
+		public String getNodeID() {
 			return NodeID;
 		}
 
-		public void setNodeID(Integer NodeID) {
+		public void setNodeID(String NodeID) {
 			this.NodeID = NodeID;
 		}
 

@@ -36,7 +36,7 @@ public class NodeManager {
 	}
 
 	@Transactional
-	public void unregisterNode(Integer nid) {
+	public void unregisterNode(String nid) {
 		NodeEntity node = repo.findNodebyNodeID(nid);
 		if (node != null) {
 			repo.deleteNodeItem(node);
@@ -53,7 +53,7 @@ public class NodeManager {
 		return repo.findNodesByOwner(owner.getUserID());
 	}
 
-	public NodeEntity findNodeById(Integer id) {
+	public NodeEntity findNodeById(String id) {
 		return repo.findNodebyNodeID(id);
 	}
 

@@ -46,7 +46,7 @@
 				<form method="post" action="<c:url value="/User/Modify/"/>">
 					<div>
 						<label class="field-label">Id</label> <input id="id" name="id"
-							type="text" value="<c:out value='${user.id}'/>" disabled/>
+							type="text" value="<c:out value='${user.userID}'/>" disabled/>
 					</div>
 					<div>
 						<label class="field-label">Name</label> <input id="name" name="name"

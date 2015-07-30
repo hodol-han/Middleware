@@ -1,36 +1,25 @@
 package kr.ac.ajou.lazybones.repos.entities;
 
 public class NodeHistoryEntity {
-    private Integer NID;
+    private String NID;
     private String time;
-    private String door;
-    private String light;
-    private String proximity;
-    private String alarm;
-    private String temperature;
-    private String humidity;
+    private String saValues;
     
 	public NodeHistoryEntity() {
 		
 	}
 	
-	public NodeHistoryEntity(Integer nid, String time, String door, String light, String prox,
-			String alarm, String temper, String hum) {
+	public NodeHistoryEntity(String nid, String time, String values) {
 		this.NID = nid;
 		this.time = time;
-		this.door = door;
-		this.light = light;
-		this.proximity = prox;
-		this.alarm = alarm;
-		this.temperature = temper;
-		this.humidity = hum;
+		this.saValues = values;
 	}
 	
-	public Integer getNID() {
+	public String getNID() {
 		return NID;
 	}
 
-	public void setNID(Integer nid) {
+	public void setNID(String nid) {
 		this.NID = nid;
 	}
 
@@ -42,51 +31,11 @@ public class NodeHistoryEntity {
 		this.time = time;
 	}
 
-	public String getDoor() {
-		return door;
+	public String getSAValues() {
+		return saValues;
 	}
 
-	public void setDoor(String door) {
-		this.door = door;
-	}
-	
-	public String getLight() {
-		return light;
-	}
-
-	public void setLight(String light) {
-		this.light = light;
-	}
-
-	public String getProximity() {
-		return proximity;
-	}
-
-	public void setProximity(String prox) {
-		this.proximity = prox;
-	}
-	
-	public String getAlarm() {
-		return alarm;
-	}
-
-	public void setAlarm(String alarm) {
-		this.alarm = alarm;
-	}
-	
-	public String getTemperature() {
-		return temperature;
-	}
-
-	public void setTemperature(String temper) {
-		this.temperature = temper;
-	}
-	
-	public String getHumidity() {
-		return humidity;
-	}
-
-	public void setHumidity(String hum) {
-		this.humidity = hum;
+	public void setSAValues(String values) {
+		this.saValues = values;
 	}
 }

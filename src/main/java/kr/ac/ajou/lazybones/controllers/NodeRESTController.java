@@ -41,7 +41,7 @@ public class NodeRESTController {
 	NodeManager nodeManager;
 	
 	@RequestMapping(value = "/Node/{id}/Query", method = RequestMethod.POST)
-	public @ResponseBody Result query(@PathVariable("id") Integer nodeId, @RequestBody String queryFormat, HttpServletRequest request) {
+	public @ResponseBody Result query(@PathVariable("id") String nodeId, @RequestBody String queryFormat, HttpServletRequest request) {
 		// Echo to test
 		Result result = new Result();
 		
