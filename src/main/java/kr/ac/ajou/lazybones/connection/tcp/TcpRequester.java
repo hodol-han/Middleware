@@ -67,7 +67,7 @@ public class TcpRequester implements Requester {
 
 	@Override
 	public boolean isConnected() {
-		return socket.isConnected();
+		return !socket.isClosed();
 	}
 
 	@Override
