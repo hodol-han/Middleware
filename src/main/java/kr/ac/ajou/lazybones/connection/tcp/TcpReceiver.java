@@ -54,7 +54,7 @@ public class TcpReceiver implements Receiver {
 
 	@Override
 	public boolean isConnected() {
-		return socket.isConnected();
+		return !socket.isClosed();		
 	}
 
 	@Override
